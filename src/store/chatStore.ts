@@ -6,7 +6,7 @@ interface ChatStore {
 
 function createChatStore() {
   const store = writable<ChatStore>({
-    open: false,
+    open: true,
   });
 
   return store;

@@ -23,6 +23,7 @@
   style:justify-content="center"
   style:align-items="center"
   style:cursor="pointer"
+  style:z-index="999"
 >
   <i class="fa-solid fa-message" style:font-size="28px" />
 </button>
