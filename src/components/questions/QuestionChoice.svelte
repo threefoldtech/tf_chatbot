@@ -2,41 +2,57 @@
 
 <script lang="ts">
   import type { IQuestionChoice } from "../../types/questions";
+  import { isEmpty } from "../../utils/isEmpty";
+  import AnswerBtn from "../AnswerBtn.svelte";
+  import chatStore from "../../store/chatStore";
 
   export let question: IQuestionChoice;
 
-  //   const questions = [
-  //     "Deploy Virtual Machine",
-  //     "Deploy K8s",
-  //     "Deploy Caprover",
-  //     "Deploy Validator",
-  //   ];
+  let selectedChoices: any[] = [];
+  function onToggleAnswer(answer: any) {
+    return () => {
+      if (!question.multi) {
+        selectedChoices = [answer];
+        return onSubmitAnswer(answer);
+      }
 
-  //   let answered = false;
-  //   let answer: string;
-  //   function onPickAnswer(_answer: string) {
-  //     return () => {
-  //       answered = true;
-  //       answer = _answer;
-  //     };
-  //   }
+      const index = selectedChoices.findIndex((a) => a === answer);
+      if (index === -1) selectedChoices = [...selectedChoices, answer];
+      else selectedChoices = selectedChoices.filter((a) => a !== answer);
+    };
+  }
+
+  function onSubmitAnswer(answer: any) {
+    chatStore.answerQuestion(question, answer);
+  }
 </script>
 
-<!-- {#each questions as question}
-  <button
-    class="button is-link mt-1 mb-1 mr-1"
-    class:is-outlined={question !== answer}
-    style:white-space="initial"
-    style:height="auto"
-    style:text-align="left"
-    disabled={answered && question !== answer}
-    readonly={question === answer}
-    on:click={answered ? undefined : onPickAnswer(question)}
-  >
-    {question}
-  </button>
-{/each}
+{#if question}
+  <div>
+    <p>{question.descr}</p>
 
-{#if answer}
-  <p>Answer: {answer}</p>
-{/if} -->
+    {#each question.choices as [value, label] (label)}
+      <AnswerBtn
+        text={label}
+        disabled={!isEmpty(question.answer) && !selectedChoices.includes(label)}
+        readonly={!isEmpty(question.answer) && selectedChoices.includes(label)}
+        outlined={!selectedChoices.includes(label)}
+        on:click={!isEmpty(question.answer) ? undefined : onToggleAnswer(label)}
+      />
+    {/each}
+
+    {#if question.multi && isEmpty(question.answer)}
+      <div class="is-flex is-justify-content-flex-end">
+        <button
+          class="button is-primary is-light"
+          disabled={selectedChoices.length === 0}
+          on:click={!isEmpty(question.answer)
+            ? undefined
+            : () => onSubmitAnswer(selectedChoices)}
+        >
+          Submit
+        </button>
+      </div>
+    {/if}
+  </div>
+{/if}

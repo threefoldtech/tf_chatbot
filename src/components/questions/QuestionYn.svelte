@@ -29,6 +29,7 @@
         text={label}
         disabled={isBool(question.answer) && question.answer !== value}
         readonly={question.answer === value}
+        outlined={question.answer !== value}
         on:click={isBool(question.answer) ? undefined : onPickAnswer(value)}
       />
     {/each}

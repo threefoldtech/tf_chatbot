@@ -38,5 +38,8 @@
     {#each $chatStore.logs as log}
       <p>{log}</p>
     {/each}
+    <p style:white-space="pre-wrap">
+      {JSON.stringify($chatStore, undefined, 4)}
+    </p>
   </div>
 </section>

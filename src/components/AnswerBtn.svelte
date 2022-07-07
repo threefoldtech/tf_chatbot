@@ -4,11 +4,12 @@
   export let text: string;
   export let disabled: boolean;
   export let readonly: boolean;
+  export let outlined: boolean;
 </script>
 
 <button
   class="button is-link mt-1 mb-1 mr-1"
-  class:is-outlined={!readonly}
+  class:is-outlined={outlined}
   style:white-space="initial"
   style:height="auto"
   style:text-align="left"
