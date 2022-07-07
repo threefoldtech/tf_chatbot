@@ -34,10 +34,10 @@
     {#each question.choices as [value, label] (label)}
       <AnswerBtn
         text={label}
-        disabled={!isEmpty(question.answer) && !selectedChoices.includes(label)}
-        readonly={!isEmpty(question.answer) && selectedChoices.includes(label)}
-        outlined={!selectedChoices.includes(label)}
-        on:click={!isEmpty(question.answer) ? undefined : onToggleAnswer(label)}
+        disabled={!isEmpty(question.answer) && !selectedChoices.includes(value)}
+        readonly={!isEmpty(question.answer) && selectedChoices.includes(value)}
+        outlined={!selectedChoices.includes(value)}
+        on:click={!isEmpty(question.answer) ? undefined : onToggleAnswer(value)}
       />
     {/each}
 

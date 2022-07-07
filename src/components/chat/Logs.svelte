@@ -39,7 +39,7 @@
       <p>{log}</p>
     {/each}
     <p style:white-space="pre-wrap">
-      {JSON.stringify($chatStore, undefined, 4)}
+      Questions {JSON.stringify($chatStore.questions, undefined, 4)}
     </p>
   </div>
 </section>

@@ -10,23 +10,7 @@ interface ChatStore {
 function createChatStore() {
   const store = writable<ChatStore>({
     open: true,
-    questions: [
-      {
-        type: "question_choice",
-        answer: null,
-        choices: [
-          [1, "yes"],
-          [0, "no"],
-          [2, "fine"],
-          [4, "lol"],
-        ],
-        descr: "are you sure?",
-        id: 10,
-        multi: true,
-        sign: false,
-        sorted: false,
-      },
-    ],
+    questions: [],
     logs: [],
   });
 
