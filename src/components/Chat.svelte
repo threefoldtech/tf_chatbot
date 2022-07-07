@@ -7,7 +7,7 @@
 </script>
 
 <section
-  style:width="100%"
+  style:width="100vw"
   style:position="fixed"
   style:top="0"
   style:left="0"

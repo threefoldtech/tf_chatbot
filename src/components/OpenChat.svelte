@@ -5,6 +5,7 @@
 
   function openChat() {
     $chatStore.open = true;
+    document.querySelector("html").style.overflow = "hidden";
   }
 </script>
 
