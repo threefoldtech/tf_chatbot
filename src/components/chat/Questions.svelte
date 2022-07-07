@@ -1,20 +1,15 @@
 <svelte:options tag="tf-chatquestions" />
 
 <script lang="ts">
-  const questions = [
-    "Deploy Virtual Machine",
-    "Deploy K8s",
-    "Deploy Caprover",
-    "Deploy Validator",
-  ];
+  import chatStore from "../../store/chatStore";
+  import type { Questions } from "../../types/questions";
 
-  let answered = false;
-  let answer: string;
-  function onPickAnswer(_answer: string) {
-    return () => {
-      answered = true;
-      answer = _answer;
-    };
+  import QuestionChoice from "../questions/QuestionChoice.svelte";
+  import QuestionYn from "../questions/QuestionYn.svelte";
+
+  function __getCmp({ type }: Questions) {
+    if (type === "yn") return QuestionYn;
+    if (type === "question_choice") return QuestionChoice;
   }
 </script>
 
@@ -33,24 +28,9 @@
     <h2 style:margin="0" style:font-size="1.6rem">Questions?</h2>
   </div>
 
-  <div nice-scroll style:padding="1rem " style:overflow-y="scroll">
-    {#each questions as question}
-      <button
-        class="button is-link mt-1 mb-1 mr-1"
-        class:is-outlined={question !== answer}
-        style:white-space="initial"
-        style:height="auto"
-        style:text-align="left"
-        disabled={answered && question !== answer}
-        readonly={question === answer}
-        on:click={answered ? undefined : onPickAnswer(question)}
-      >
-        {question}
-      </button>
+  <div nice-scroll style:padding="1rem " style:overflow-y="auto">
+    {#each $chatStore.questions as question (question.id)}
+      <svelte:component this={__getCmp(question)} {question} />
     {/each}
-
-    {#if answer}
-      <p>Answer: {answer}</p>
-    {/if}
   </div>
 </section>
