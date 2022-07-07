@@ -6,10 +6,12 @@
 
   import QuestionChoice from "../questions/QuestionChoice.svelte";
   import QuestionYn from "../questions/QuestionYn.svelte";
+  import QuestionInput from "../questions/QuestionInput.svelte";
 
   function __getCmp({ type }: Questions) {
     if (type === "yn") return QuestionYn;
     if (type === "question_choice") return QuestionChoice;
+    if (type === "question") return QuestionInput;
   }
 </script>
 

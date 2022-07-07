@@ -10,7 +10,44 @@ interface ChatStore {
 function createChatStore() {
   const store = writable<ChatStore>({
     open: true,
-    questions: [],
+    questions: [
+      {
+        type: "question",
+        id: 10,
+        descr: "aname",
+        returntype: "string", //can be bool, string, int, uint
+        regex: "\\w+", //only relevant when string
+        regex_errormsg: "can only be a name with a...z, and A...Z", //shown when regex does not match, if not specified show regex
+        min: 0, //only relevant when (u)int
+        max: 0, //only relevant when (u)int
+        sign: false, //if sign then the result will also return a signed field
+        answer: null,
+      },
+      {
+        type: "question",
+        id: 12,
+        descr: "aname",
+        returntype: "int", //can be bool, string, int, uint
+        regex: "\\w+", //only relevant when string
+        regex_errormsg: "can only be a name with a...z, and A...Z", //shown when regex does not match, if not specified show regex
+        min: 1, //only relevant when (u)int
+        max: 10, //only relevant when (u)int
+        sign: false, //if sign then the result will also return a signed field
+        answer: null,
+      },
+      {
+        type: "question",
+        id: 11,
+        descr: "aname",
+        returntype: "bool", //can be bool, string, int, uint
+        regex: "", //only relevant when string
+        regex_errormsg: "", //shown when regex does not match, if not specified show regex
+        min: 0, //only relevant when (u)int
+        max: 0, //only relevant when (u)int
+        sign: false, //if sign then the result will also return a signed field
+        answer: null,
+      },
+    ],
     logs: [],
   });
 

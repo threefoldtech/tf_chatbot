@@ -19,7 +19,7 @@
     }
 
     [nice-scroll]::-webkit-scrollbar-track {
-      box-shadow: inset 0 0 0 6px rgba(0, 0, 0, 0.05);
+      box-shadow: inset 0 0 0 10px rgba(0, 0, 0, 0.05);
     }
 
     [nice-scroll]::-webkit-scrollbar-thumb {
