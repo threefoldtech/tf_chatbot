@@ -26,12 +26,21 @@
     style:align-items="center"
   >
     <h2 style:margin="0" style:font-size="1.6rem">Logs!</h2>
-    <i
-      on:click={closeChat}
-      class="fa-solid fa-xmark"
-      style:font-size="15px"
-      style:cursor="pointer"
-    />
+    <div>
+      {#if $chatStore.connected}
+        <span class="tag is-success is-normal">Connected</span>
+      {:else}
+        <span class="tag is-danger is-normal">
+          Connecting <i class="ml-1 fas fa-spinner fa-pulse" />
+        </span>
+      {/if}
+      <i
+        on:click={closeChat}
+        class="ml-2 fa-solid fa-xmark"
+        style:font-size="15px"
+        style:cursor="pointer"
+      />
+    </div>
   </div>
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
