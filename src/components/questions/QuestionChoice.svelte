@@ -4,7 +4,7 @@
   import type { IQuestionChoice } from "../../types/questions";
   import { isEmpty } from "../../utils/isEmpty";
   import AnswerBtn from "../AnswerBtn.svelte";
-  import chatStore from "../../store/chatStore";
+  import { ChatServer } from "../../services/chatServer";
 
   export let question: IQuestionChoice;
 
@@ -23,7 +23,7 @@
   }
 
   function onSubmitAnswer(answer: any) {
-    chatStore.answerQuestion(question, answer);
+    ChatServer.answerQuestion(question, answer);
   }
 </script>
 

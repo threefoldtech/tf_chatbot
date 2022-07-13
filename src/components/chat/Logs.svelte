@@ -45,10 +45,7 @@
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.logs as log}
-      <p>{log}</p>
+      <p>- [+] {log}</p>
     {/each}
-    <p style:white-space="pre-wrap">
-      Questions {JSON.stringify($chatStore.questions, undefined, 4)}
-    </p>
   </div>
 </section>

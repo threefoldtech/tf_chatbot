@@ -18,6 +18,16 @@ function createChatStore() {
     socket,
     connected: false,
     questions: [
+      {
+        id: -1,
+        type: "question_choice",
+        descr: "Welcome in threefold chatbot",
+        choices: [[true, "Show More!"]],
+        multi: false,
+        sorted: false,
+        sign: false,
+        answer: null,
+      },
       // {
       //   type: "question",
       //   id: 10,
@@ -87,6 +97,12 @@ function createChatStore() {
           q.answer = answer;
           return q;
         });
+        return store;
+      });
+    },
+    pushLogs(data: any) {
+      return update((store) => {
+        store.logs.push(JSON.stringify(data));
         return store;
       });
     },
