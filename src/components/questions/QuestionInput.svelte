@@ -3,7 +3,7 @@
 <script lang="ts">
   import type { IQuestion } from "../../types/questions";
   import { isBool } from "../../utils/isBool";
-  import chatStore from "../../store/chatStore";
+  import { ChatServer } from "../../services/chatServer";
 
   export let question: IQuestion;
   let answer: any = null;
@@ -37,7 +37,7 @@
   }
 
   function onAnswer() {
-    chatStore.answerQuestion(question, answer);
+    ChatServer.answerQuestion(question, answer);
     answered = true;
   }
 </script>
