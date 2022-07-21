@@ -8,14 +8,24 @@ import { Socket } from 'socket.io';
 import Client from 'tfchain_client_ts';
 
 enum Services {
+  INIT = 'init',
   PING = 'ping',
   LIST_TWINS = 'list twins',
   OTHER_SERVICES = 'other',
+  IS_ADMIN = 'isAdmin',
+  DEPLOY = 'deploy',
+  BALANCE = 'getBalance',
 }
 interface AskForService {
   logs: any;
   services: any;
 }
+
+const deploymentQuestions = {
+  name: 'Name your deployment.',
+  memory: 'Choose your RAM size.',
+  cpu: 'Choose your CPU cores.',
+};
 
 let id = 0;
 
@@ -27,10 +37,29 @@ let id = 0;
 })
 export class AppGateway implements OnGatewayInit {
   private readonly logger = new Logger('AppGateway');
+  client;
 
-  afterInit() {
+  async afterInit() {
     this.logger.log('Initialize!');
   }
+
+  // @SubscribeMessage('init')
+  // handleInitEvent() {
+  //   console.log('entered init');
+  //   return {
+  //     type: 'question',
+  //     id: id++,
+  //     descr: 'Start using Chatbot with entering your Mnemonices',
+  //     returntype: 'string',
+  //     regex: '.*',
+  //     regex_errormsg: '',
+  //     min: 0,
+  //     max: 0,
+  //     sign: false,
+
+  //     answer: '',
+  //   };
+  // }
 
   // what to respond to a 'services' message?
   @SubscribeMessage('services')
@@ -39,11 +68,14 @@ export class AppGateway implements OnGatewayInit {
     return {
       id: id++,
       type: 'question_choice',
-      descr: 'Which service are you looking for?',
+      descr: '# `Which` service are you [looking](https://www.google.com) for?',
       choices: [
         [Services.PING, 'Ping!'],
         [Services.LIST_TWINS, 'List Twins!'],
         [Services.OTHER_SERVICES, 'Request Service!'],
+        [Services.IS_ADMIN, 'Is Admin!'],
+        [Services.DEPLOY, 'Deploy!'],
+        // [Services.BALANCE, 'Get Balance!'],
       ],
       multi: false,
       sorted: false,
@@ -61,17 +93,28 @@ export class AppGateway implements OnGatewayInit {
     console.log({ data });
 
     switch (data) {
-      case Services.PING:
+      case Services.INIT:
+        this.client = new Client('wss://tfchain.dev.grid.tf', 'words');
+        await this.client.init();
         return {
-          logs: 'Pong!',
+          logs: data,
+          services: this.handleServicesEvent(),
+        };
+
+      case Services.PING:
+        console.log(data);
+        return {
+          logs: '### Head',
           services: this.handleServicesEvent(),
         };
 
       case Services.LIST_TWINS:
+        // data here should be the mnemonics
         const client = new Client('wss://tfchain.dev.grid.tf', data);
         await client.init();
 
         const twins = await client.listTwins();
+
         return {
           logs: twins,
           services: this.handleServicesEvent(),
@@ -99,7 +142,7 @@ export class AppGateway implements OnGatewayInit {
           services: {
             type: 'question',
             id: 10,
-            descr: 'Your mnemonics?',
+            descr: 'Name the service?',
             returntype: 'string', //can be bool, string, int, uint
             regex: '.*', //only relevant when string
             regex_errormsg: '', //shown when regex does not match, if not specified show regex
@@ -107,6 +150,51 @@ export class AppGateway implements OnGatewayInit {
             max: 0, //only relevant when (u)int
             sign: false, //if sign then the result will also return a signed field
           },
+        };
+
+      case Services.IS_ADMIN:
+        const answer = data;
+        return {
+          logs: answer,
+          services: {
+            type: 'question',
+            id: 10,
+            descr: 'Are you admin?',
+            returntype: 'bool', //can be bool, string, int, uint
+            regex: '.*', //only relevant when string
+            regex_errormsg: '', //shown when regex does not match, if not specified show regex
+            min: 0, //only relevant when (u)int
+            max: 0, //only relevant when (u)int
+            sign: false, //if sign then the result will also return a signed field
+          },
+        };
+
+      case Services.DEPLOY:
+        // the data here is 'deploy'
+        return {
+          logs: data,
+          services: {
+            type: 'question',
+            id: 11,
+            descr: deploymentQuestions.name,
+            returntype: 'bool', //can be bool, string, int, uint
+            regex: '.*', //only relevant when string
+            regex_errormsg: '', //shown when regex does not match, if not specified show regex
+            min: 0, //only relevant when (u)int
+            max: 0, //only relevant when (u)int
+            sign: false, //if sign then the result will also return a signed field
+          },
+        };
+
+      case Services.BALANCE:
+        const twinId = data;
+
+        const twin = this.client.getTwin(twinId) as any;
+        const balance = this.client.getBalance(twin.address);
+
+        return {
+          logs: balance,
+          services: this.handleServicesEvent(),
         };
 
       // if you got any thing else than services go and init a chain clinet
@@ -123,7 +211,7 @@ export class AppGateway implements OnGatewayInit {
         // }
 
         return {
-          logs: 'Service was not found',
+          logs: data ? 'Authorized' : 'Not Authorized',
           services: this.handleServicesEvent(),
         };
       }

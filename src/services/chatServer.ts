@@ -13,6 +13,13 @@ export class ChatServer {
       });
     }
 
+    // if (question.id === 0) {
+    //   return socket.emit('init', (data: Questions) => {
+    //     chatStore.answerQuestion(question, answer);
+    //     chatStore.addQuestion(data);
+    //   })
+    // }
+
     socket.emit("askForService", answer, ({ logs, services }: any) => {
       chatStore.answerQuestion(question, answer);
       chatStore.pushLogs(logs);

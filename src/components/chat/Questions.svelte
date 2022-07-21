@@ -31,7 +31,12 @@
   </div>
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
+    <!-- 
+      are we need it to be keyed each? this prevent requesting the same service again.
     {#each $chatStore.questions as question (question.id)}
+
+     -->
+    {#each $chatStore.questions as question}
       <svelte:component this={__getCmp(question)} {question} />
     {/each}
   </div>

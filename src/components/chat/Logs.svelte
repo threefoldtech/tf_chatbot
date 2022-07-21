@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import chatStore from "../../store/chatStore";
+  
 
   function closeChat() {
     $chatStore.open = false;
@@ -45,7 +46,7 @@
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.logs as log}
-      <p>- [+] {log}</p>
+      <div>{log}</div>
     {/each}
   </div>
 </section>

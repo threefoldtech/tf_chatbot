@@ -8,6 +8,10 @@
 
   export let question: IQuestionChoice;
 
+  import showdown from "showdown";
+  const converter = new showdown.Converter();
+  import snarkdown from "snarkdown"
+
   let selectedChoices: any[] = [];
   function onToggleAnswer(answer: any) {
     return () => {
@@ -29,7 +33,7 @@
 
 {#if question}
   <div>
-    <p>{question.descr}</p>
+    <div>{@html snarkdown(question.descr)}</div>
 
     {#each question.choices as [value, label] (label)}
       <AnswerBtn
