@@ -29,19 +29,6 @@ function createChatStore() {
           answer: null,
         },
         // {
-        //   type: "question",
-        //   id: -1,
-        //   descr: "Start using Chatbot with entering your Mnemonices",
-        //   returntype: "string",
-        //   regex: ".*",
-        //   regex_errormsg: "",
-        //   min: 0,
-        //   max: 0,
-        //   sign: false,
-  
-        //   answer: "",
-        // },
-        // {
       //   type: "question",
       //   id: 10,
       //   descr: "aname",

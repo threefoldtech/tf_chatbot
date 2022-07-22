@@ -8,14 +8,15 @@ import { Socket } from 'socket.io';
 import Client from 'tfchain_client_ts';
 
 enum Services {
-  INIT = 'init',
+  // INIT = 'init',
   PING = 'ping',
   LIST_TWINS = 'list twins',
-  OTHER_SERVICES = 'other',
   IS_ADMIN = 'isAdmin',
-  DEPLOY = 'deploy',
-  BALANCE = 'getBalance',
+  OTHER_SERVICES = 'other',
+  // DEPLOY = 'deploy',
+  // BALANCE = 'getBalance',
 }
+
 interface AskForService {
   logs: any;
   services: any;
@@ -61,9 +62,8 @@ export class AppGateway implements OnGatewayInit {
   //   };
   // }
 
-  // what to respond to a 'services' message?
   @SubscribeMessage('services')
-  // with a list of the services avilable.
+  // respond to the 'services' message with the avilable services.
   handleServicesEvent() {
     return {
       id: id++,
@@ -75,7 +75,7 @@ export class AppGateway implements OnGatewayInit {
         [Services.LIST_TWINS, 'List Twins!'],
         [Services.OTHER_SERVICES, 'Request Service!'],
         [Services.IS_ADMIN, 'Is Admin!'],
-        [Services.DEPLOY, 'Deploy!'],
+        // [Services.DEPLOY, 'Deploy!'],
         // [Services.BALANCE, 'Get Balance!'],
       ],
       multi: false,
@@ -84,23 +84,21 @@ export class AppGateway implements OnGatewayInit {
     };
   }
 
-  // what to respond to a 'askForService' message?
   @SubscribeMessage('askForService')
+  // respond for the 'askForService' with the equevilant service is asked for.
   async handleMessageEvent(_: Socket, data: Services): Promise<AskForService> {
-    // log in the server what services is asked for
     this.logger.log(`Asking for ${data} service`);
 
-    // log in the server the data from the input
     console.log({ data });
 
     switch (data) {
-      case Services.INIT:
-        this.client = new Client('wss://tfchain.dev.grid.tf', 'words');
-        await this.client.init();
-        return {
-          logs: data,
-          services: this.handleServicesEvent(),
-        };
+      // case Services.INIT:
+      //   this.client = new Client('wss://tfchain.dev.grid.tf', 'words');
+      //   await this.client.init();
+      //   return {
+      //     logs: data,
+      //     services: this.handleServicesEvent(),
+      //   };
 
       case Services.PING:
         console.log(data);
@@ -110,7 +108,7 @@ export class AppGateway implements OnGatewayInit {
         };
 
       case Services.LIST_TWINS:
-        // data here should be the mnemonics
+        // data sent with init the client is the mnemonices.
         const client = new Client('wss://tfchain.dev.grid.tf', data);
         await client.init();
 
@@ -170,33 +168,33 @@ export class AppGateway implements OnGatewayInit {
           },
         };
 
-      case Services.DEPLOY:
-        // the data here is 'deploy'
-        return {
-          logs: data,
-          services: {
-            type: 'question',
-            id: 11,
-            descr: deploymentQuestions.name,
-            returntype: 'bool', //can be bool, string, int, uint
-            regex: '.*', //only relevant when string
-            regex_errormsg: '', //shown when regex does not match, if not specified show regex
-            min: 0, //only relevant when (u)int
-            max: 0, //only relevant when (u)int
-            sign: false, //if sign then the result will also return a signed field
-          },
-        };
+      // case Services.DEPLOY:
+      //   // the data here is 'deploy'
+      //   return {
+      //     logs: data,
+      //     services: {
+      //       type: 'question',
+      //       id: 11,
+      //       descr: deploymentQuestions.name,
+      //       returntype: 'bool', //can be bool, string, int, uint
+      //       regex: '.*', //only relevant when string
+      //       regex_errormsg: '', //shown when regex does not match, if not specified show regex
+      //       min: 0, //only relevant when (u)int
+      //       max: 0, //only relevant when (u)int
+      //       sign: false, //if sign then the result will also return a signed field
+      //     },
+      //   };
 
-      case Services.BALANCE:
-        const twinId = data;
+      // case Services.BALANCE:
+      //   const twinId = data;
 
-        const twin = this.client.getTwin(twinId) as any;
-        const balance = this.client.getBalance(twin.address);
+      //   const twin = this.client.getTwin(twinId) as any;
+      //   const balance = this.client.getBalance(twin.address);
 
-        return {
-          logs: balance,
-          services: this.handleServicesEvent(),
-        };
+      //   return {
+      //     logs: balance,
+      //     services: this.handleServicesEvent(),
+      //   };
 
       // if you got any thing else than services go and init a chain clinet
       default: {
