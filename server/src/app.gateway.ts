@@ -115,7 +115,7 @@ export class AppGateway implements OnGatewayInit {
         const twins = await client.listTwins();
 
         return {
-          logs: twins,
+          logs: JSON.stringify(twins),
           services: this.handleServicesEvent(),
           //   logs: 'Listing Twins',
           //   services: {
