@@ -11,7 +11,7 @@
   style:font-size="1em"
   style:font-weight="400"
   style:line-height="1.5"
->
+  >
   <!-- Start global css style for all components -->
   <style>
     [nice-scroll]::-webkit-scrollbar {
@@ -24,6 +24,26 @@
 
     [nice-scroll]::-webkit-scrollbar-thumb {
       background-color: #999;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+    h2 {
+      font-size: 24px;
+    }
+
+    h3 {
+      font-size: 20.8px;
+    }
+    h4 {
+      font-size: 16px;
+    }
+    h5 {
+      font-size: 12.8px;
+    }
+    h6 {
+      font-size: 11.2px;
     }
   </style>
   <!-- End global css style for all components -->

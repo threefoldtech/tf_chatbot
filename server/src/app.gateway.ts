@@ -68,7 +68,8 @@ export class AppGateway implements OnGatewayInit {
     return {
       id: id++,
       type: 'question_choice',
-      descr: '# `Which` service are you [looking](https://www.google.com) for?',
+      descr:
+        '# `Which` **service** *are* you [looking](https://www.google.com) for?',
       choices: [
         [Services.PING, 'Ping!'],
         [Services.LIST_TWINS, 'List Twins!'],
