@@ -8,8 +8,6 @@
 
   export let question: IQuestionChoice;
 
-  import showdown from "showdown";
-  const converter = new showdown.Converter();
   import snarkdown from "snarkdown"
 
   let selectedChoices: any[] = [];

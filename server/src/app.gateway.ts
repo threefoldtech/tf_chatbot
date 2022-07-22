@@ -105,7 +105,7 @@ export class AppGateway implements OnGatewayInit {
       case Services.PING:
         console.log(data);
         return {
-          logs: '### Head',
+          logs: '### *Pong!* and another **Ping**',
           services: this.handleServicesEvent(),
         };
 

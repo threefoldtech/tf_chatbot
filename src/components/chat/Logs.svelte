@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import chatStore from "../../store/chatStore";
-  
+  import snarkdown from "snarkdown";
 
   function closeChat() {
     $chatStore.open = false;
@@ -46,7 +46,7 @@
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.logs as log}
-      <div>{log}</div>
+      {@html snarkdown(JSON.parse(log))}
     {/each}
   </div>
 </section>
