@@ -13,6 +13,7 @@ enum Services {
   LIST_TWINS = 'list twins',
   IS_ADMIN = 'isAdmin',
   OTHER_SERVICES = 'other',
+  COUNTRY = 'country',
   // DEPLOY = 'deploy',
   // BALANCE = 'getBalance',
 }
@@ -75,6 +76,7 @@ export class AppGateway implements OnGatewayInit {
         [Services.LIST_TWINS, 'List Twins!'],
         [Services.OTHER_SERVICES, 'Request Service!'],
         [Services.IS_ADMIN, 'Is Admin!'],
+        [Services.COUNTRY, 'Choose Country'],
         // [Services.DEPLOY, 'Deploy!'],
         // [Services.BALANCE, 'Get Balance!'],
       ],
@@ -107,6 +109,24 @@ export class AppGateway implements OnGatewayInit {
           services: this.handleServicesEvent(),
         };
 
+      case Services.COUNTRY:
+        return {
+          logs: '# Selected Country',
+          services: {
+            type: 'question_dropdown',
+            id: 11,
+            question: '# Which Country?',
+            descr: 'Choose a Country',
+            sorted: false,
+            choices: [
+              [false, 'Home'],
+              [true, 'Egypt'],
+              [false, 'Belguim'],
+            ],
+            multi: false,
+            sign: false,
+          },
+        };
       case Services.LIST_TWINS:
         // data sent with init the client is the mnemonices.
         const client = new Client('wss://tfchain.dev.grid.tf', data);
@@ -210,7 +230,7 @@ export class AppGateway implements OnGatewayInit {
         // }
 
         return {
-          logs: data ? 'Authorized' : 'Not Authorized',
+          logs: data,
           services: this.handleServicesEvent(),
         };
       }

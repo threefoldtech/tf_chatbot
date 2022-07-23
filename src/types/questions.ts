@@ -33,4 +33,17 @@ export interface IQuestionChoice {
   answer: any;
 }
 
-export type Questions = IQuestion | IQuestionYn | IQuestionChoice;
+export interface IQuestionDropdown {
+  type: "question_dropdown";
+  question: string;
+  id: number;
+  descr: string;
+  sorted: boolean;
+  choices: [any, string][];
+  multi: boolean;
+  sign: boolean;
+
+  answer: any;
+}
+
+export type Questions = IQuestion | IQuestionYn | IQuestionChoice | IQuestionDropdown;
