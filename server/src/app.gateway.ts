@@ -83,7 +83,7 @@ export class AppGateway implements OnGatewayInit {
           logs: data,
           services: {
             type: 'question',
-            id: 10,
+            id: id++,
             question: '## Input your data?',
             descr: 'Hello',
             returntype: 'string',
@@ -102,7 +102,7 @@ export class AppGateway implements OnGatewayInit {
             type: 'yn',
             chat_id: 0,
             question: '# Are you admin?',
-            id: 0,
+            id: id++,
           },
         };
 
@@ -111,7 +111,7 @@ export class AppGateway implements OnGatewayInit {
           logs: '# Selected Country',
           services: {
             type: 'question_dropdown',
-            id: 11,
+            id: id++,
             question: '# Which Country?',
             descr: 'Choose a Country',
             sorted: false,
@@ -130,7 +130,7 @@ export class AppGateway implements OnGatewayInit {
           logs: '# Choose End of time',
           services: {
             type: 'q-date',
-            id: 0,
+            id: id++,
             question: '## When to end the deployment?',
             answer: '2022-07-25',
           },

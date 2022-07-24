@@ -73,6 +73,18 @@ function createChatStore() {
         return store;
       });
     },
+    deleteQuestion(questionId) {
+      return update((store) => {
+        console.log(store.questions);
+
+        store.questions = store.questions.filter(
+          (question) => question.id !== questionId
+        );
+
+        console.log(store.questions);
+        return store;
+      });
+    },
     answerQuestion(question: Questions, answer: any) {
       return update((store) => {
         store.questions = store.questions.map((q) => {

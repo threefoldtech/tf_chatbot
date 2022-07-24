@@ -21,6 +21,10 @@
   const deleteAllQs = () => {
     chatStore.cleanStore();
   };
+
+  const deleteSelected = (questionId) => {
+    chatStore.deleteQuestion(questionId);
+  };
 </script>
 
 <section
@@ -58,7 +62,24 @@
 
      -->
     {#each $chatStore.questions as question}
-      <svelte:component this={__getCmp(question)} {question} />
+      <div class="container">
+        <div class="is-flex" style="align-items: center">
+          <div style="margin-right: 30px;">{question.id}</div>
+          <!-- svelte-ignore a11y-missing-attribute -->
+          {#if question.id != -1}
+            <div style="margin-right: 30px;">
+              <a on:click={() => deleteSelected(question.id)}>
+                <i
+                  class="fa fa-trash fa-2xl"
+                  style="color: black;"
+                  aria-hidden="true"
+                />
+              </a>
+            </div>
+          {/if}
+          <svelte:component this={__getCmp(question)} {question} />
+        </div>
+      </div>
     {/each}
   </div>
 </section>
