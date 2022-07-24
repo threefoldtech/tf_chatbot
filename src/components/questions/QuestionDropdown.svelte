@@ -1,4 +1,4 @@
-<svelte:options tag="tft-question-dropdown" />
+<svelte:options tag="tf-question-dropdown" />
 
 <script lang="ts">
   import type { IQuestionDropdown } from "../../types/questions";
@@ -13,30 +13,24 @@
     console.log(selected);
     ChatServer.answerQuestion(question, selected);
   };
-
 </script>
 
 {#if question}
   <div>{@html snarkdown(question.question)}</div>
-
-  <section class="dropdown">
+  <div class="is-flex is-justify-content-space-between">
     <select class="menu" name="menu" id="menu" bind:value={selected}>
-      <option disabled selected value=""
-        >{question.descr}...</option
-      >
+      <option disabled selected value="">{question.descr}...</option>
       {#each question.choices as country}
         <option value={country[1]}>{country[1]}</option>
       {/each}
     </select>
-    <div class="is-flex is-justify-content-end">
-      <button
-        type="submit"
-        class="button is-primary is-light"
-        disabled={selected === ""}
-        on:click={onSubmit}
-      >
-        Submit
-      </button>
-    </div>
-  </section>
+    <button
+      type="submit"
+      class="button is-primary is-light"
+      disabled={selected === ""}
+      on:click={onSubmit}
+    >
+      Submit
+    </button>
+  </div>
 {/if}
