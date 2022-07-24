@@ -4,6 +4,7 @@
   import type { IQuestion } from "../../types/questions";
   import { isBool } from "../../utils/isBool";
   import { ChatServer } from "../../services/chatServer";
+  import snarkdown from "snarkdown";
 
   export let question: IQuestion;
   let answer: any = null;
@@ -37,16 +38,16 @@
   }
 
   function onAnswer() {
-    ChatServer.answerQuestion(question, answer);
+    ChatServer.answerQuestion(question, question.answer);
     answered = true;
   }
 </script>
 
 {#if question}
   <div>
-    <p>{question.descr}</p>
+    <div>{@html snarkdown(question.question)}</div>
 
-    <form on:submit|preventDefault={onAnswer}>
+    <div class="is-flex is-justify-content-space-between">
       <div class="field">
         <div class="control">
           {#if question.returntype === "string"}
@@ -54,7 +55,7 @@
               class="input"
               type="text"
               placeholder={question.descr}
-              bind:value={answer}
+              bind:value={question.answer}
               readonly={answered}
             />
           {:else if question.returntype === "bool"}
@@ -96,17 +97,14 @@
         {/if}
       </div>
 
-      {#if !answered}
-        <div class="is-flex is-justify-content-end">
-          <button
-            type="submit"
-            class="button is-primary is-light"
-            disabled={answer === null || !isValid(answer)}
-          >
-            Submit
-          </button>
-        </div>
-      {/if}
-    </form>
+      <button
+        type="submit"
+        class="button is-primary is-light"
+        disabled={!question.answer}
+        on:click={onAnswer}
+      >
+        Next
+      </button>
+    </div>
   </div>
 {/if}

@@ -52,7 +52,7 @@
             ? undefined
             : () => onSubmitAnswer(selectedChoices)}
         >
-          Submit
+          Next
         </button>
       </div>
     {/if}

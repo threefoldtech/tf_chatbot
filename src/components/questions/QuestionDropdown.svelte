@@ -30,7 +30,7 @@
       disabled={selected === ""}
       on:click={onSubmit}
     >
-      Submit
+    Next
     </button>
   </div>
 {/if}

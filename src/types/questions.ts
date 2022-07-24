@@ -1,6 +1,7 @@
 export interface IQuestion {
   type: "question";
   id: number;
+  question: string,
   descr: string;
   returntype: "string" | "bool" | "uint" | "int";
   regex: string;
@@ -46,4 +47,16 @@ export interface IQuestionDropdown {
   answer: any;
 }
 
-export type Questions = IQuestion | IQuestionYn | IQuestionChoice | IQuestionDropdown;
+export interface IQuestionDate {
+  type: "q-date";
+  id: number;
+  question: string;
+  answer: any;
+}
+
+export type Questions =
+  | IQuestion
+  | IQuestionYn
+  | IQuestionChoice
+  | IQuestionDropdown
+  | IQuestionDate;

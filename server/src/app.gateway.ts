@@ -5,29 +5,20 @@ import {
   OnGatewayInit,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import Client from 'tfchain_client_ts';
 
 enum Services {
-  // INIT = 'init',
-  PING = 'ping',
-  LIST_TWINS = 'list twins',
-  IS_ADMIN = 'isAdmin',
-  OTHER_SERVICES = 'other',
-  COUNTRY = 'country',
-  // DEPLOY = 'deploy',
-  // BALANCE = 'getBalance',
+  TASK = 'task', // regular choice message
+  REQUEST_SERVICE = 'request', // choices question
+  IS_ADMIN = 'isAdmin', // Yes/No question
+  ECHO = 'echo', // input question
+  COUNTRY = 'country', // dropmenu question
+  END_TIME = 'end time', // date question
 }
 
 interface AskForService {
   logs: any;
   services: any;
 }
-
-const deploymentQuestions = {
-  name: 'Name your deployment.',
-  memory: 'Choose your RAM size.',
-  cpu: 'Choose your CPU cores.',
-};
 
 let id = 0;
 
@@ -45,40 +36,19 @@ export class AppGateway implements OnGatewayInit {
     this.logger.log('Initialize!');
   }
 
-  // @SubscribeMessage('init')
-  // handleInitEvent() {
-  //   console.log('entered init');
-  //   return {
-  //     type: 'question',
-  //     id: id++,
-  //     descr: 'Start using Chatbot with entering your Mnemonices',
-  //     returntype: 'string',
-  //     regex: '.*',
-  //     regex_errormsg: '',
-  //     min: 0,
-  //     max: 0,
-  //     sign: false,
-
-  //     answer: '',
-  //   };
-  // }
-
   @SubscribeMessage('services')
   // respond to the 'services' message with the avilable services.
   handleServicesEvent() {
     return {
       id: id++,
       type: 'question_choice',
-      descr:
-        '# `Which` **service** *are* you [looking](https://www.google.com) for?',
+      descr: '# `Which Services are you looking for?`',
       choices: [
-        [Services.PING, 'Ping!'],
-        [Services.LIST_TWINS, 'List Twins!'],
-        [Services.OTHER_SERVICES, 'Request Service!'],
+        [Services.TASK, 'Do Something!'],
         [Services.IS_ADMIN, 'Is Admin!'],
-        [Services.COUNTRY, 'Choose Country'],
-        // [Services.DEPLOY, 'Deploy!'],
-        // [Services.BALANCE, 'Get Balance!'],
+        [Services.ECHO, 'Input Message!'],
+        [Services.COUNTRY, 'Choose Country!'],
+        [Services.END_TIME, 'When to delete!'],
       ],
       multi: false,
       sorted: false,
@@ -93,20 +63,47 @@ export class AppGateway implements OnGatewayInit {
 
     console.log({ data });
 
-    switch (data) {
-      // case Services.INIT:
-      //   this.client = new Client('wss://tfchain.dev.grid.tf', 'words');
-      //   await this.client.init();
-      //   return {
-      //     logs: data,
-      //     services: this.handleServicesEvent(),
-      //   };
+    if (typeof data === 'boolean') {
+      const answer = data ? 'Yes' : 'No';
+      return {
+        logs: answer,
+        services: this.handleServicesEvent(),
+      };
+    }
 
-      case Services.PING:
-        console.log(data);
+    switch (data) {
+      case Services.TASK:
         return {
-          logs: '### *Pong!* and another **Ping**',
+          logs: '### *Calling the chain...*',
           services: this.handleServicesEvent(),
+        };
+
+      case Services.ECHO:
+        return {
+          logs: data,
+          services: {
+            type: 'question',
+            id: 10,
+            question: '## Input your data?',
+            descr: 'Hello',
+            returntype: 'string',
+            regex: '.*',
+            regex_errormsg: '',
+            min: 0,
+            max: 0,
+            sign: false,
+          },
+        };
+
+      case Services.IS_ADMIN:
+        return {
+          logs: JSON.stringify(data),
+          services: {
+            type: 'yn',
+            chat_id: 0,
+            question: '# Are you admin?',
+            id: 0,
+          },
         };
 
       case Services.COUNTRY:
@@ -127,108 +124,19 @@ export class AppGateway implements OnGatewayInit {
             sign: false,
           },
         };
-      case Services.LIST_TWINS:
-        // data sent with init the client is the mnemonices.
-        const client = new Client('wss://tfchain.dev.grid.tf', data);
-        await client.init();
 
-        const twins = await client.listTwins();
-
+      case Services.END_TIME:
         return {
-          logs: JSON.stringify(twins),
-          services: this.handleServicesEvent(),
-          //   logs: 'Listing Twins',
-          //   services: {
-          //     type: 'question',
-          //     id: 10,
-          //     descr: 'Your mnemonics?',
-          //     returntype: 'string', //can be bool, string, int, uint
-          //     regex: '.*', //only relevant when string
-          //     regex_errormsg: '', //shown when regex does not match, if not specified show regex
-          //     min: 0, //only relevant when (u)int
-          //     max: 0, //only relevant when (u)int
-          //     sign: false, //if sign then the result will also return a signed field
-          //   },
-        };
-
-      case Services.OTHER_SERVICES:
-        // do something with the comming data
-        const name = data;
-        return {
-          // return logs for the logs panerl & services for what to do next in the q panel?
-          logs: name,
-          // or return another inputquestion
+          logs: '# Choose End of time',
           services: {
-            type: 'question',
-            id: 10,
-            descr: 'Name the service?',
-            returntype: 'string', //can be bool, string, int, uint
-            regex: '.*', //only relevant when string
-            regex_errormsg: '', //shown when regex does not match, if not specified show regex
-            min: 0, //only relevant when (u)int
-            max: 0, //only relevant when (u)int
-            sign: false, //if sign then the result will also return a signed field
+            type: 'q-date',
+            id: 0,
+            question: '## When to end the deployment?',
+            answer: '2022-07-25',
           },
         };
 
-      case Services.IS_ADMIN:
-        const answer = data;
-        return {
-          logs: answer,
-          services: {
-            type: 'question',
-            id: 10,
-            descr: 'Are you admin?',
-            returntype: 'bool', //can be bool, string, int, uint
-            regex: '.*', //only relevant when string
-            regex_errormsg: '', //shown when regex does not match, if not specified show regex
-            min: 0, //only relevant when (u)int
-            max: 0, //only relevant when (u)int
-            sign: false, //if sign then the result will also return a signed field
-          },
-        };
-
-      // case Services.DEPLOY:
-      //   // the data here is 'deploy'
-      //   return {
-      //     logs: data,
-      //     services: {
-      //       type: 'question',
-      //       id: 11,
-      //       descr: deploymentQuestions.name,
-      //       returntype: 'bool', //can be bool, string, int, uint
-      //       regex: '.*', //only relevant when string
-      //       regex_errormsg: '', //shown when regex does not match, if not specified show regex
-      //       min: 0, //only relevant when (u)int
-      //       max: 0, //only relevant when (u)int
-      //       sign: false, //if sign then the result will also return a signed field
-      //     },
-      //   };
-
-      // case Services.BALANCE:
-      //   const twinId = data;
-
-      //   const twin = this.client.getTwin(twinId) as any;
-      //   const balance = this.client.getBalance(twin.address);
-
-      //   return {
-      //     logs: balance,
-      //     services: this.handleServicesEvent(),
-      //   };
-
-      // if you got any thing else than services go and init a chain clinet
       default: {
-        //   /* Assume reset values for mns */
-        //   const client = new Client('wss://tfchain.dev.grid.tf', data);
-        //   await client.init();
-
-        //   // console.log({ mn: data });
-        //   return {
-        //     logs: await client.listTwins(),
-        //     services: this.handleServicesEvent(),
-        //   };
-        // }
-
         return {
           logs: data,
           services: this.handleServicesEvent(),
