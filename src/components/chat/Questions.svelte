@@ -17,6 +17,10 @@
     if (type === "question_dropdown") return QuestionDropdown;
     if (type === "q-date") return QuestionDate;
   }
+
+  const deleteAllQs = () => {
+    chatStore.cleanStore();
+  };
 </script>
 
 <section
@@ -31,7 +35,20 @@
     style:color="white"
     style:padding="15px"
   >
-    <h2 style:margin="0" style:font-size="1.6rem">Questions?</h2>
+    <div
+      class="is-flex is-justify-content-space-between"
+      style="align-items: center"
+    >
+      <h2 style:margin="0" style:font-size="1.6rem">Questions?</h2>
+      <!-- svelte-ignore a11y-missing-attribute -->
+      <a on:click={deleteAllQs}>
+        <i
+          class="fa fa-trash fa-2xl"
+          style="color: white;"
+          aria-hidden="true"
+        />
+      </a>
+    </div>
   </div>
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">

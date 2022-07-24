@@ -47,6 +47,7 @@
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.logs as log}
       {@html snarkdown(JSON.parse(log))}
+      <br />
     {/each}
   </div>
 </section>
