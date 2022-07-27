@@ -7,9 +7,8 @@
   export let question: IQuestionYn;
 
   const onSubmit = () => {
-
     console.log(question.answer);
-    ChatServer.answerQuestion(question, question.answer);
+    ChatServer.answerQuestion("ws", question, question.answer);
   };
 </script>
 
@@ -18,15 +17,24 @@
   <div class="is-flex is-justify-content-space-between">
     <div>
       <label>
-        <input type=radio bind:group={question.answer} name="scoops" value={true}>
+        <input
+          type="radio"
+          bind:group={question.answer}
+          name="scoops"
+          value={true}
+        />
         Yes
       </label>
-      
+
       <label>
-        <input type=radio bind:group={question.answer} name="scoops" value={false}>
+        <input
+          type="radio"
+          bind:group={question.answer}
+          name="scoops"
+          value={false}
+        />
         No
       </label>
-      
     </div>
     <button
       type="submit"

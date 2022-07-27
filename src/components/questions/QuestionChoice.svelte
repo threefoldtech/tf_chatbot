@@ -8,7 +8,7 @@
 
   export let question: IQuestionChoice;
 
-  import snarkdown from "snarkdown"
+  import snarkdown from "snarkdown";
 
   let selectedChoices: any[] = [];
   function onToggleAnswer(answer: any) {
@@ -25,7 +25,7 @@
   }
 
   function onSubmitAnswer(answer: any) {
-    ChatServer.answerQuestion(question, answer);
+    ChatServer.answerQuestion("ws", question, answer);
   }
 </script>
 

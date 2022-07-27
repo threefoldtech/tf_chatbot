@@ -8,22 +8,22 @@
   export let question: IQuestionDate;
 
   const onSubmit = () => {
-    console.log(question.answer)
-    ChatServer.answerQuestion(question, question.answer);
+    console.log(question.answer);
+    ChatServer.answerQuestion("ws", question, question.answer);
   };
 </script>
 
 {#if question}
   <div>{@html snarkdown(question.question)}</div>
   <div class="is-flex is-justify-content-space-between">
-    <input type="date" bind:value={question.answer}/>
+    <input type="date" bind:value={question.answer} />
     <button
       type="submit"
       class="button is-primary is-light"
       disabled={question.answer === ""}
       on:click={onSubmit}
     >
-    Next
+      Next
     </button>
   </div>
 {/if}

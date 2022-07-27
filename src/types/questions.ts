@@ -1,7 +1,7 @@
 export interface IQuestion {
   type: "question";
   id: number;
-  question: string,
+  question: string;
   descr: string;
   returntype: "string" | "bool" | "uint" | "int";
   regex: string;
@@ -53,6 +53,8 @@ export interface IQuestionDate {
   question: string;
   answer: any;
 }
+
+export type Protocols = "ws" | "http";
 
 export type Questions =
   | IQuestion

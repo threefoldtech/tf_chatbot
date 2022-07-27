@@ -11,7 +11,7 @@
 
   const onSubmit = () => {
     console.log(selected);
-    ChatServer.answerQuestion(question, selected);
+    ChatServer.answerQuestion("ws", question, selected);
   };
 </script>
 
@@ -30,7 +30,7 @@
       disabled={selected === ""}
       on:click={onSubmit}
     >
-    Next
+      Next
     </button>
   </div>
 {/if}
