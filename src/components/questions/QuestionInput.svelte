@@ -38,7 +38,8 @@
   }
 
   function onAnswer() {
-    ChatServer.answerQuestion("ws", question, question.answer);
+    const chatserver = new ChatServer();
+    chatserver.answerQuestion(question, question.answer);
     answered = true;
   }
 </script>

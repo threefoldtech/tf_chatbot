@@ -25,7 +25,8 @@
   }
 
   function onSubmitAnswer(answer: any) {
-    ChatServer.answerQuestion("ws", question, answer);
+    const chatserver = new ChatServer();
+    chatserver.answerQuestion(question, answer);
   }
 </script>
 

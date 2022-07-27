@@ -11,7 +11,8 @@
 
   const onSubmit = () => {
     console.log(selected);
-    ChatServer.answerQuestion("ws", question, selected);
+    const chatserver = new ChatServer();
+    chatserver.answerQuestion(question, selected);
   };
 </script>
 

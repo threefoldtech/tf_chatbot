@@ -54,8 +54,6 @@ export interface IQuestionDate {
   answer: any;
 }
 
-export type Protocols = "ws" | "http";
-
 export type Questions =
   | IQuestion
   | IQuestionYn

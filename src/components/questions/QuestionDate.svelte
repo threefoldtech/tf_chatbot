@@ -9,7 +9,8 @@
 
   const onSubmit = () => {
     console.log(question.answer);
-    ChatServer.answerQuestion("ws", question, question.answer);
+    const chatserver = new ChatServer();
+    chatserver.answerQuestion(question, question.answer);
   };
 </script>
 

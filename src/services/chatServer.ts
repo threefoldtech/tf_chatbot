@@ -1,14 +1,9 @@
-import WsClient from "./wsClient";
-import type { Questions, Protocols } from "../types/questions";
+import WsChatServer from "./wsChatServer";
+import type { Questions } from "../types/questions";
 
-export class ChatServer {
-  static answerQuestion(over: Protocols, question: Questions, answer: any) {
-    if (over == "ws") {
-      const ws = new WsClient(question, answer);
-
-      return question.id === -1 ? ws.listServices() : ws.askForService();
-    } else if (over == "http") {
-      // do some fetch calls.
-    }
+export class ChatServer extends WsChatServer {
+  answerQuestion(question: Questions, answer: any) {
+    if (question.id === -1) return super.listServices(question, answer);
+    super.askForService(question, answer);
   }
 }
