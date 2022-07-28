@@ -10322,4 +10322,46 @@ Result: {"jsonrpc":"2.0","id":1005,"result":null}
 Params: {"jsonrpc":"2.0","id":1006,"method":"textDocument/hover","params":{"textDocument":{"uri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v"},"position":{"line":46,"character":0}}}
 
 [Trace - 16:14:37] Sending response 'textDocument/hover - (1006)' took 0ms
-Result: {"jsonrpc":"2.0","id":1006,"result":{"contents":{"language":"v","value":"mut server &Server"},"r
+Result: {"jsonrpc":"2.0","id":1006,"result":{"contents":{"language":"v","value":"mut server &Server"},"range":{"start":{"line":46,"character":1},"end":{"line":46,"character":7}}}}
+
+[Trace - 16:14:39] Received request 'textDocument/hover - (1007)'.
+Params: {"jsonrpc":"2.0","id":1007,"method":"textDocument/hover","params":{"textDocument":{"uri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v"},"position":{"line":48,"character":8}}}
+
+[Trace - 16:14:39] Sending response 'textDocument/hover - (1007)' took 0ms
+Result: {"jsonrpc":"2.0","id":1007,"result":null}
+
+[Trace - 16:14:39] Received request 'textDocument/codeLens - (1008)'.
+Params: {"jsonrpc":"2.0","id":1008,"method":"textDocument/codeLens","params":{"textDocument":{"uri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v"}}}
+
+[Trace - 16:14:39] Sending response 'textDocument/codeLens - (1008)' took 0ms
+Result: {"jsonrpc":"2.0","id":1008,"result":null}
+
+[Trace - 16:16:03] Received request 'textDocument/foldingRange - (1009)'.
+Params: {"jsonrpc":"2.0","id":1009,"method":"textDocument/foldingRange","params":{"textDocument":{"uri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v"}}}
+
+[Trace - 16:16:03] Sending response 'textDocument/foldingRange - (1009)' took 7ms
+Result: {"jsonrpc":"2.0","id":1009,"result":[{"startLine":0,"startCharacter":0,"endLine":1,"endCharacter":20,"kind":"imports"},{"startLine":3,"startCharacter":14,"endLine":8,"endCharacter":1,"kind":"region"},{"startLine":12,"startCharacter":15,"endLine":25,"endCharacter":1,"kind":"region"},{"startLine":27,"startCharacter":24,"endLine":30,"endCharacter":1,"kind":"region"},{"startLine":32,"startCharacter":51,"endLine":35,"endCharacter":1,"kind":"region"},{"startLine":37,"startCharacter":68,"endLine":40,"endCharacter":1,"kind":"region"},{"startLine":42,"startCharacter":10,"endLine":49,"endCharacter":1,"kind":"region"},{"startLine":43,"startCharacter":1,"endLine":43,"endCharacter":28,"kind":"comment"},{"startLine":44,"startCharacter":34,"endLine":44,"endCharacter":36,"kind":"region"},{"startLine":51,"startCharacter":0,"endLine":209,"endCharacter":2,"kind":"comment"}]}
+
+[Trace - 16:16:03] Received request 'textDocument/codeLens - (1010)'.
+Params: {"jsonrpc":"2.0","id":1010,"method":"textDocument/codeLens","params":{"textDocument":{"uri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v"}}}
+
+[Trace - 16:16:03] Sending response 'textDocument/codeLens - (1010)' took 0ms
+Result: {"jsonrpc":"2.0","id":1010,"result":null}
+
+[Trace - 16:17:22] Received request 'textDocument/hover - (1011)'.
+Params: {"jsonrpc":"2.0","id":1011,"method":"textDocument/hover","params":{"textDocument":{"uri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v"},"position":{"line":47,"character":22}}}
+
+[Trace - 16:17:22] Sending response 'textDocument/hover - (1011)' took 0ms
+Result: {"jsonrpc":"2.0","id":1011,"result":{"contents":{"language":"v","value":"fn log_connect(mut c ServerClient) ?bool"},"range":{"start":{"line":47,"character":19},"end":{"line":47,"character":30}}}}
+
+[Trace - 16:17:23] Received request 'textDocument/codeLens - (1012)'.
+Params: {"jsonrpc":"2.0","id":1012,"method":"textDocument/codeLens","params":{"textDocument":{"uri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v"}}}
+
+[Trace - 16:17:23] Sending response 'textDocument/codeLens - (1012)' took 0ms
+Result: {"jsonrpc":"2.0","id":1012,"result":null}
+
+[Trace - 16:17:23] Received request 'textDocument/definition - (1013)'.
+Params: {"jsonrpc":"2.0","id":1013,"method":"textDocument/definition","params":{"textDocument":{"uri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v"},"position":{"line":47,"character":22}}}
+
+[Trace - 16:17:23] Sending response 'textDocument/definition - (1013)' took 0ms
+Result: {"jsonrpc":"2.0","id":1013,"result":[{"originSelectionRange":{"start":{"line":47,"character":19},"end":{"line":47,"character":30}},"targetUri":"file:///Users/timurgordon/code/github/threefoldtech/tf_chatbot/vserver/src/main.v","targetRange":{"start":{"line":3
