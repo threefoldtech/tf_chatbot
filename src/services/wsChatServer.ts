@@ -23,7 +23,7 @@ export default class WsChatServer implements IChatServer {
       answer,
       ({ logs, services }: any) => {
         chatStore.answerQuestion(question, answer);
-        chatStore.pushLogs(logs);
+        chatStore.pushLogs(question.id, logs);
         chatStore.addQuestion(services);
       }
     );

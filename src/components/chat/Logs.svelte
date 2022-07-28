@@ -8,6 +8,10 @@
     $chatStore.open = false;
     document.querySelector("html").style.overflow = null;
   }
+
+  function deleteLog(log) {
+    chatStore.deleteLog(log);
+  }
 </script>
 
 <section
@@ -46,7 +50,20 @@
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.logs as log}
-      {@html snarkdown(JSON.parse(log))}
+      <div
+        class="is-flex is-justify-content-space-between	"
+        style="align-items: center"
+      >
+        {@html snarkdown(JSON.parse(log.data))}
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <a on:click={() => deleteLog(log)}>
+          <i
+            class="fa fa-trash fa-2xl"
+            style="color: black;"
+            aria-hidden="true"
+          />
+        </a>
+      </div>
       <br />
     {/each}
   </div>

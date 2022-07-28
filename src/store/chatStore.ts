@@ -6,9 +6,14 @@ interface ChatStore {
   open: boolean;
   initQuestions: Questions[];
   questions: Questions[];
-  logs: string[];
+  logs: Log[];
   socket: Socket;
   connected: boolean;
+}
+
+interface Log {
+  id: number;
+  data: string;
 }
 
 function createChatStore() {
@@ -70,18 +75,22 @@ function createChatStore() {
     cleanStore() {
       return update((store) => {
         store.questions = store.initQuestions;
+        store.logs = [];
         return store;
       });
     },
     deleteQuestion(questionId) {
       return update((store) => {
-        console.log(store.questions);
-
         store.questions = store.questions.filter(
           (question) => question.id !== questionId
         );
 
-        console.log(store.questions);
+        return store;
+      });
+    },
+    deleteLog(deletedLog) {
+      return update((store) => {
+        store.logs = store.logs.filter((log) => log.id !== deletedLog.id);
         return store;
       });
     },
@@ -96,9 +105,9 @@ function createChatStore() {
         return store;
       });
     },
-    pushLogs(data: any) {
+    pushLogs(id: number, data: any) {
       return update((store) => {
-        store.logs.push(JSON.stringify(data));
+        store.logs.push({ id, data: JSON.stringify(data) });
         return store;
       });
     },
