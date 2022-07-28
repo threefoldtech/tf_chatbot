@@ -89,7 +89,8 @@ function createChatStore() {
       return update((store) => {
         store.questions = store.questions.map((q) => {
           if (q !== question) return q;
-          q.answer = answer;
+          // keep all the questions unanswered to enable edit/delete
+          // q.answer = answer;
           return q;
         });
         return store;
