@@ -1,75 +1,61 @@
-import { Logger } from '@nestjs/common';
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  OnGatewayInit,
-} from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import Client from 'tfchain_client_ts';
+import net
+import net.websocket
 
 enum Services {
-  // INIT = 'init',
-  PING = 'ping',
-  LIST_TWINS = 'list twins',
-  IS_ADMIN = 'isAdmin',
-  OTHER_SERVICES = 'other',
-  // DEPLOY = 'deploy',
-  // BALANCE = 'getBalance',
+	ping
+	list
+	is_admin
+	other
+}
+
+type ServiceChoice = Services | string
+
+struct Service {
+	servicetype    string
+	id             int
+	descr          string
+	returntype     string
+	regex          string
+	regex_errormsg string
+	min            int
+	max            int
+	choices        []ServiceChoice
+	multi          bool
+	sorted         bool
+	sign           bool
 }
 
 interface AskForService {
-  logs: any;
-  services: any;
+	logs string
+	services Service
 }
 
-const deploymentQuestions = {
-  name: 'Name your deployment.',
-  memory: 'Choose your RAM size.',
-  cpu: 'Choose your CPU cores.',
-};
+fn log_connect(mut c websocket.ServerClient) ?bool {
+	println('Client: connected to server')
+	return true
+}
 
-let id = 0;
+fn handle_message(mut c websocket.Client, msg &websocket.Message) ? {
+	println(msg.payload)
+	c.write('hello'.bytes(), msg.opcode)?
+}
 
-@WebSocketGateway(8081, {
-  cors: {
-    origin: 'http://localhost:8080',
-  },
-  transports: ['websocket', 'polling'],
-})
+fn main() {
+	// incoming message handler
+	server_opt := websocket.ServerOpt{}
+	mut server := websocket.new_server(net.AddrFamily.ip, 8081, '', server_opt)
+	server.listen()?
+	server.on_connect(log_connect)?
+	server.on_message(handle_message)
+}
 
-
-export class AppGateway implements OnGatewayInit {
-  private readonly logger = new Logger('AppGateway');
-  client;
-
-  async afterInit() {
-    this.logger.log('Initialize!');
-  }
-
-  // @SubscribeMessage('init')
-  // handleInitEvent() {
-  //   console.log('entered init');
-  //   return {
-  //     type: 'question',
-  //     id: id++,
-  //     descr: 'Start using Chatbot with entering your Mnemonices',
-  //     returntype: 'string',
-  //     regex: '.*',
-  //     regex_errormsg: '',
-  //     min: 0,
-  //     max: 0,
-  //     sign: false,
-
-  //     answer: '',
-  //   };
-  // }
-
-  @SubscribeMessage('services')
+/*
+@SubscribeMessage('services')
   // respond to the 'services' message with the avilable services.
-  handleServicesEvent() {
-    return {
+  handleServiceasEvent() {
+    return Service{servicetype:, id:, descr:, returntype:, regex:, regex_errormsg:, min:, max:, sign:}{
       id: id++,
-      type: 'question_choice',
+      servicetype: 'question_choice',
       descr:
         '# `Which` **service** *are* you [looking](https://www.google.com) for?',
       choices: [
@@ -170,6 +156,8 @@ export class AppGateway implements OnGatewayInit {
           },
         };
 
+
+
       // case Services.DEPLOY:
       //   // the data here is 'deploy'
       //   return {
@@ -219,3 +207,4 @@ export class AppGateway implements OnGatewayInit {
     }
   }
 }
+*/

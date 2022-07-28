@@ -1,17 +1,25 @@
 import { writable } from "svelte/store";
 import type { Questions } from "../types/questions";
-import { io, Socket } from "socket.io-client";
 
 interface ChatStore {
   open: boolean;
   questions: Questions[];
   logs: string[];
-  socket: Socket;
+  socket: WebSocket;
   connected: boolean;
 }
 
 function createChatStore() {
-  const socket = io("ws://localhost:8081");
+  const socket = new WebSocket("ws://127.0.0.1:8081");
+
+    socket.onopen = function open(e) {
+        console.log("socket open!")
+        socket.send('something');
+    };
+    
+    socket.addEventListener('message', function (event) {
+        console.log('Message from server ', event.data);
+    });
 
   const store = writable<ChatStore>({
     open: true,
@@ -68,8 +76,9 @@ function createChatStore() {
     logs: [],
   });
 
-  socket.on("connect", __updateConnected(true));
-  socket.on("disconnect", __updateConnected(false));
+  socket.addEventListener('open', __updateConnected(true));
+  socket.addEventListener('close', __updateConnected(false));
+  
   function __updateConnected(connected: boolean) {
     return () => {
       store.update((store) => {
