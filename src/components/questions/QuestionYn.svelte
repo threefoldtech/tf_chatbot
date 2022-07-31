@@ -4,13 +4,27 @@
   import type { IQuestionYn } from "../../types/questions";
   import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
-  export let question: IQuestionYn;
+  import chatStore from "../../store/chatStore";
 
-  const onSubmit = () => {
-    console.log(question.answer);
-    const chatserver = new ChatServer();
-    chatserver.answerQuestion(question, question.answer);
+  export let question: IQuestionYn;
+  let answer: any;
+
+  $: {
+    if (answer !== undefined) updateAnswer();
+  }
+
+  const updateAnswer = () => {
+    chatStore.update((oldStore) => {
+      oldStore.currentAnswer = answer;
+      return oldStore;
+    });
   };
+
+  // const onSubmit = () => {
+  //   console.log(question.answer);
+  //   const chatserver = new ChatServer();
+  //   chatserver.answerQuestion(question, question.answer);
+  // };
 </script>
 
 {#if question}
@@ -18,32 +32,22 @@
   <div class="is-flex is-justify-content-space-between">
     <div>
       <label>
-        <input
-          type="radio"
-          bind:group={question.answer}
-          name="scoops"
-          value={true}
-        />
+        <input type="radio" bind:group={answer} name="scoops" value={true} />
         Yes
       </label>
 
       <label>
-        <input
-          type="radio"
-          bind:group={question.answer}
-          name="scoops"
-          value={false}
-        />
+        <input type="radio" bind:group={answer} name="scoops" value={false} />
         No
       </label>
     </div>
-    <button
+    <!-- <button
       type="submit"
       class="button is-primary is-light"
       disabled={question.answer === undefined}
       on:click={onSubmit}
     >
       Next
-    </button>
+    </button> -->
   </div>
 {/if}

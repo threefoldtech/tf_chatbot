@@ -9,6 +9,7 @@ interface ChatStore {
   logs: Log[];
   socket: Socket;
   connected: boolean;
+  currentAnswer: any;
 }
 
 interface Log {
@@ -28,7 +29,7 @@ function createChatStore() {
         id: -1,
         type: "question_choice",
         descr: "Welcome in threefold chatbot",
-        choices: [[true, "Next!"]],
+        choices: [],
         multi: false,
         sorted: false,
         sign: false,
@@ -40,7 +41,7 @@ function createChatStore() {
         id: -1,
         type: "question_choice",
         descr: "Welcome in threefold chatbot",
-        choices: [[true, "Next!"]],
+        choices: [],
         multi: false,
         sorted: false,
         sign: false,
@@ -48,6 +49,7 @@ function createChatStore() {
       },
     ],
     logs: [],
+    currentAnswer: undefined,
   });
 
   socket.on("connect", __updateConnected(true));
@@ -66,6 +68,7 @@ function createChatStore() {
   return {
     subscribe,
     set,
+    update,
     addQuestion(question: Questions) {
       return update((store) => {
         store.questions.push(question);
@@ -100,6 +103,7 @@ function createChatStore() {
           if (q !== question) return q;
           // keep all the questions unanswered to enable edit/delete
           // q.answer = answer;
+          // store.currentAnswer = answer;
           return q;
         });
         return store;

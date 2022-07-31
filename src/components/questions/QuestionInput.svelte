@@ -6,8 +6,10 @@
   import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
 
+  import chatStore from "../../store/chatStore";
+
   export let question: IQuestion;
-  let answer: any = null;
+  let answer: any = undefined;
   let answered = false;
 
   function isValid(answer: any) {
@@ -37,11 +39,22 @@
     return "Invalid input value";
   }
 
-  function onAnswer() {
-    const chatserver = new ChatServer();
-    chatserver.answerQuestion(question, question.answer);
-    answered = true;
+  $: {
+    if (answer !== undefined) updateAnswer();
   }
+
+  const updateAnswer = () => {
+    console.log("answerfromcomp", answer);
+    chatStore.update((oldStore) => {
+      oldStore.currentAnswer = answer;
+      return oldStore;
+    });
+  };
+  // function onAnswer() {
+  //   const chatserver = new ChatServer();
+  //   chatserver.answerQuestion(question, question.answer);
+  //   answered = true;
+  // }
 </script>
 
 {#if question}
@@ -56,7 +69,7 @@
               class="input"
               type="text"
               placeholder={question.descr}
-              bind:value={question.answer}
+              bind:value={answer}
               readonly={answered}
             />
           {:else if question.returntype === "bool"}
@@ -98,14 +111,14 @@
         {/if}
       </div>
 
-      <button
+      <!-- <button
         type="submit"
         class="button is-primary is-light"
         disabled={!question.answer}
         on:click={onAnswer}
       >
         Next
-      </button>
+      </button> -->
     </div>
   </div>
 {/if}

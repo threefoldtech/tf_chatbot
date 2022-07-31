@@ -1,4 +1,4 @@
-<svelte:options tag="tf-chatquestions" />
+<svelte:options tag="tf-chat-questions" />
 
 <script lang="ts">
   import chatStore from "../../store/chatStore";
@@ -9,6 +9,8 @@
   import QuestionInput from "../questions/QuestionInput.svelte";
   import QuestionDropdown from "../questions/QuestionDropdown.svelte";
   import QuestionDate from "../questions/QuestionDate.svelte";
+  import QuestionForm from "../questions/QuestionForm.svelte";
+  import Actions from "../Actions.svelte";
 
   function __getCmp({ type }: Questions) {
     if (type === "yn") return QuestionYn;
@@ -16,6 +18,7 @@
     if (type === "question") return QuestionInput;
     if (type === "question_dropdown") return QuestionDropdown;
     if (type === "q-date") return QuestionDate;
+    if (type === "question_form") return QuestionForm;
   }
 
   const deleteAllQs = () => {
@@ -66,7 +69,7 @@
         <div class="is-flex" style="align-items: center">
           <div style="margin-right: 30px;">{question.id}</div>
           <!-- svelte-ignore a11y-missing-attribute -->
-          {#if question.id != -1}
+          <!-- {#if question.id != -1}
             <div style="margin-right: 30px;">
               <a on:click={() => deleteSelected(question.id)}>
                 <i
@@ -76,8 +79,9 @@
                 />
               </a>
             </div>
-          {/if}
+          {/if} -->
           <svelte:component this={__getCmp(question)} {question} />
+          <Actions {question} />
         </div>
       </div>
     {/each}
