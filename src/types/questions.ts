@@ -54,9 +54,19 @@ export interface IQuestionDate {
   answer: any;
 }
 
+export interface IQuestionForm {
+  type: "question_form";
+  chat_id: number;
+  id: number;
+  description: string;
+  form: Questions[];
+  sign: false;
+}
+
 export type Questions =
   | IQuestion
   | IQuestionYn
   | IQuestionChoice
   | IQuestionDropdown
-  | IQuestionDate;
+  | IQuestionDate
+  | IQuestionForm;

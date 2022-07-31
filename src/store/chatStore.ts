@@ -9,7 +9,7 @@ interface ChatStore {
   logs: Log[];
   socket: Socket;
   connected: boolean;
-  currentAnswer: any;
+  currentAnswer: {};
 }
 
 interface Log {
@@ -49,7 +49,7 @@ function createChatStore() {
       },
     ],
     logs: [],
-    currentAnswer: undefined,
+    currentAnswer: {},
   });
 
   socket.on("connect", __updateConnected(true));

@@ -54,7 +54,10 @@
         class="is-flex is-justify-content-space-between	"
         style="align-items: center"
       >
-        {@html snarkdown(JSON.parse(log.data))}
+        <!-- comment for now. todo better parsing. -->
+        <!-- {@html snarkdown(JSON.parse(JSON.parse(log.data)))} -->
+        {log.data}
+
         <!-- svelte-ignore a11y-missing-attribute -->
         <a on:click={() => deleteLog(log)}>
           <i

@@ -7,6 +7,7 @@
 
   export let question: IQuestionDropdown;
   let answer: any = undefined;
+  export let form: boolean = false;
 
   // $: {
   //   if (question) {
@@ -30,7 +31,9 @@
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      oldStore.currentAnswer = answer;
+      // if is single question. empty the answer store.
+      if (!form) oldStore.currentAnswer = {};
+      oldStore.currentAnswer[question.id] = answer;
       return oldStore;
     });
   };

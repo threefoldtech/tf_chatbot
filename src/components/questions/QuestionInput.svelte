@@ -11,6 +11,7 @@
   export let question: IQuestion;
   let answer: any = undefined;
   let answered = false;
+  export let form: boolean = false;
 
   function isValid(answer: any) {
     /* not touched yet! */
@@ -44,9 +45,11 @@
   }
 
   const updateAnswer = () => {
-    console.log("answerfromcomp", answer);
     chatStore.update((oldStore) => {
-      oldStore.currentAnswer = answer;
+      // if is single question. empty the answer store.
+      if (!form) oldStore.currentAnswer = {};
+
+      oldStore.currentAnswer[question.id] = answer;
       return oldStore;
     });
   };

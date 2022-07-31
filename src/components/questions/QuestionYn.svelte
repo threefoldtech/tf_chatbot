@@ -8,6 +8,7 @@
 
   export let question: IQuestionYn;
   let answer: any;
+  export let form: boolean = false;
 
   $: {
     if (answer !== undefined) updateAnswer();
@@ -15,7 +16,9 @@
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      oldStore.currentAnswer = answer;
+      // if is single question. empty the answer store.
+      if (!form) oldStore.currentAnswer = {};
+      oldStore.currentAnswer[question.id] = answer;
       return oldStore;
     });
   };

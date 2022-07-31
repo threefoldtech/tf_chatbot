@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { Logger } from '@nestjs/common';
 import {
   SubscribeMessage,
@@ -13,6 +14,7 @@ enum Services {
   ECHO = 'echo', // input question
   COUNTRY = 'country', // dropmenu question
   END_TIME = 'end time', // date question
+  FORM = 'form',
 }
 
 interface AskForService {
@@ -20,7 +22,8 @@ interface AskForService {
   services: any;
 }
 
-let id = 0;
+let id = 0; // must be unique for every question during the session.
+const chatId = () => v4().split('-')[0];
 
 @WebSocketGateway(8081, {
   cors: {
@@ -49,6 +52,7 @@ export class AppGateway implements OnGatewayInit {
         [Services.ECHO, 'Input Message!'],
         [Services.COUNTRY, 'Choose Country!'],
         [Services.END_TIME, 'When to delete!'],
+        [Services.FORM, 'Deployment Specs!'],
       ],
       multi: false,
       sorted: false,
@@ -133,6 +137,52 @@ export class AppGateway implements OnGatewayInit {
             id: id++,
             question: '## When to end the deployment?',
             answer: '2022-07-25',
+          },
+        };
+
+      case Services.FORM:
+        return {
+          logs: '# Fill the specs',
+          services: {
+            type: 'question_form',
+            chat_id: chatId(),
+            id: id++,
+            description: '# Answer the Qs',
+            form: [
+              {
+                type: 'question',
+                question: '## Input your data?',
+
+                id: id++,
+                descr: 'aname',
+                returntype: 'string', //can be bool, string, int, uint
+                regex: '.*', //only relevant when string
+                regex_errormsg: '', //shown when regex does not match, if not specified show regex
+                min: 0, //only relevant when (u)int
+                max: 0, //only relevant when (u)int
+              },
+              {
+                type: 'yn',
+                chat_id: 0,
+                question: '# Are you admin?',
+                id: id++,
+              },
+              {
+                type: 'question_dropdown',
+                id: id++,
+                question: '# Which Country?',
+                descr: 'Choose a Country',
+                sorted: false,
+                choices: [
+                  [false, 'Home'],
+                  [true, 'Egypt'],
+                  [false, 'Belguim'],
+                ],
+                multi: false,
+                sign: false,
+              },
+            ],
+            sign: false, //if sign then the result will also return a signed field
           },
         };
 
