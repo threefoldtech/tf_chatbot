@@ -24,6 +24,7 @@ export interface IQuestionYn {
 
 export interface IQuestionChoice {
   type: "question_choice";
+  question: string;
   id: number;
   descr: string;
   sorted: boolean;
@@ -56,6 +57,7 @@ export interface IQuestionDate {
 
 export interface IQuestionForm {
   type: "question_form";
+  question: string;
   chat_id: number;
   id: number;
   description: string;

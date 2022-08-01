@@ -36,35 +36,39 @@
 
 <!-- Avoid rendering if no question -->
 {#if question}
-  <div class="actions">
-    <!-- Avoid delete if the first question -->
-    {#if question.id !== -1}
-      <button
+  <!-- <div class="actions"> -->
+  <!-- Avoid delete if the first question -->
+  {#if question.id !== 0}
+    <a href="#" on:click={onDelete} class="card-footer-item">Delete</a>
+
+    <!-- <button
         type="reset"
         class="delete-button button is-danger is-light"
         on:click={onDelete}
       >
         Delete
-      </button>
-    {/if}
+      </button> -->
+  {/if}
 
-    <!-- Avoid Nexting if multi choices question and not first q-->
-    {#if question.type !== "question_choice" || question.id === -1}
-      <button
+  <!-- Avoid Nexting if multi choices question and not first q-->
+  {#if question.type !== "question_choice" || question.id === 0}
+    <a href="#" on:click={onSubmit} class="card-footer-item">Next</a>
+
+    <!-- <button
         type="submit"
         class="submit-button button is-primary is-light"
         on:click={onSubmit}
       >
         Next
-      </button>
-    {/if}
-  </div>
+      </button> -->
+  {/if}
+  <!-- </div> -->
 {/if}
 
-<style>
+<!-- <style>
   .actions {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-</style>
+</style> -->

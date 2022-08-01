@@ -26,9 +26,10 @@ function createChatStore() {
     connected: false,
     initQuestions: [
       {
-        id: -1,
+        id: 0,
         type: "question_choice",
         descr: "Welcome in threefold chatbot",
+        question: "Welcome in threefold chatbot",
         choices: [],
         multi: false,
         sorted: false,
@@ -38,9 +39,10 @@ function createChatStore() {
     ],
     questions: [
       {
-        id: -1,
+        id: 0,
         type: "question_choice",
         descr: "Welcome in threefold chatbot",
+        question: "Welcome in threefold chatbot",
         choices: [],
         multi: false,
         sorted: false,

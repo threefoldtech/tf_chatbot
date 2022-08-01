@@ -63,6 +63,9 @@
 {#if question}
   <div>
     <div>{@html snarkdown(question.question)}</div>
+    {#if !form}
+      <hr />
+    {/if}
 
     <div class="is-flex is-justify-content-space-between">
       <div class="field">

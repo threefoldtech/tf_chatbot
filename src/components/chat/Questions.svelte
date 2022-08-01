@@ -12,6 +12,8 @@
   import QuestionForm from "../questions/QuestionForm.svelte";
   import Actions from "../Actions.svelte";
 
+  import snarkdown from "snarkdown";
+
   function __getCmp({ type }: Questions) {
     if (type === "yn") return QuestionYn;
     if (type === "question_choice") return QuestionChoice;
@@ -59,31 +61,22 @@
   </div>
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
-    <!-- 
-      are we need it to be keyed each? this prevent requesting the same service again.
-    {#each $chatStore.questions as question (question.id)}
-
-     -->
     {#each $chatStore.questions as question}
-      <div class="container">
-        <div class="is-flex" style="align-items: center">
-          <div style="margin-right: 30px;">{question.id}</div>
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <!-- {#if question.id != -1}
-            <div style="margin-right: 30px;">
-              <a on:click={() => deleteSelected(question.id)}>
-                <i
-                  class="fa fa-trash fa-2xl"
-                  style="color: black;"
-                  aria-hidden="true"
-                />
-              </a>
-            </div>
-          {/if} -->
-          <svelte:component this={__getCmp(question)} {question} />
-          <Actions {question} />
+      <div class="card">
+        <div class="card-content">
+          <div class="content">
+            <svelte:component this={__getCmp(question)} {question} />
+          </div>
         </div>
+
+        <footer class="card-footer">
+          <!-- <a href="#" class="card-footer-item">Save</a>
+          <a href="#" class="card-footer-item">Edit</a>
+          <a href="#" class="card-footer-item">Delete</a> -->
+          <Actions {question} />
+        </footer>
       </div>
+      <br />
     {/each}
   </div>
 </section>

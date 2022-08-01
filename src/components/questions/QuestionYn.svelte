@@ -32,6 +32,10 @@
 
 {#if question}
   <div>{@html snarkdown(question.question)}</div>
+  {#if !form}
+    <hr />
+  {/if}
+
   <div class="is-flex is-justify-content-space-between">
     <div>
       <label>

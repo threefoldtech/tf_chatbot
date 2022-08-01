@@ -47,6 +47,8 @@
 
 {#if question}
   <div style="margin-right: 30px">{@html snarkdown(question.description)}</div>
+  <hr />
+
   <form>
     {#each question.form as question}
       <svelte:component this={__getCmp(question)} {question} form={true} />

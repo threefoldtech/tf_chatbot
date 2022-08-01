@@ -22,7 +22,7 @@ interface AskForService {
   services: any;
 }
 
-let id = 0; // must be unique for every question during the session.
+let id = 1; // must be unique for every question during the session.
 const chatId = () => v4().split('-')[0];
 
 @WebSocketGateway(8081, {
@@ -104,7 +104,7 @@ export class AppGateway implements OnGatewayInit {
           logs: JSON.stringify(data),
           services: {
             type: 'yn',
-            chat_id: 0,
+            chat_id: chatId,
             question: '# Are you admin?',
             id: id++,
           },

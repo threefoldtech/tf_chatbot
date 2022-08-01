@@ -19,7 +19,7 @@
       }
 
       const index = selectedChoices.findIndex((a) => a === answer);
-      if (index === -1) selectedChoices = [...selectedChoices, answer];
+      if (index === 0) selectedChoices = [...selectedChoices, answer];
       else selectedChoices = selectedChoices.filter((a) => a !== answer);
     };
   }
@@ -33,6 +33,9 @@
 {#if question}
   <div>
     <div>{@html snarkdown(question.descr)}</div>
+    {#if question.id !== 0}
+      <hr />
+    {/if}
 
     {#each question.choices as [value, label] (label)}
       <AnswerBtn
