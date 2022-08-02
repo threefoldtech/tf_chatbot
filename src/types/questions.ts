@@ -15,11 +15,11 @@ export interface IQuestion {
 
 export interface IQuestionYn {
   type: "yn";
-  chat_id: number;
+  chat_id: string;
   question: string;
   id: number;
 
-  answer: boolean;
+  answer: any;
 }
 
 export interface IQuestionChoice {
@@ -58,7 +58,7 @@ export interface IQuestionDate {
 export interface IQuestionForm {
   type: "question_form";
   question: string;
-  chat_id: number;
+  chat_id: string;
   id: number;
   description: string;
   form: Questions[];

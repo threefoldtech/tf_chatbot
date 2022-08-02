@@ -1,3 +1,4 @@
+import { Questions } from './../../src/types/questions';
 import { v4 } from 'uuid';
 import { Logger } from '@nestjs/common';
 import {
@@ -19,11 +20,11 @@ enum Services {
 
 interface AskForService {
   logs: any;
-  services: any;
+  services: Questions;
 }
 
 let id = 1; // must be unique for every question during the session.
-const chatId = () => v4().split('-')[0];
+const chatId = (): string => v4().split('-')[0];
 
 @WebSocketGateway(8081, {
   cors: {
@@ -41,10 +42,11 @@ export class AppGateway implements OnGatewayInit {
 
   @SubscribeMessage('services')
   // respond to the 'services' message with the avilable services.
-  handleServicesEvent() {
+  handleServicesEvent(): Questions {
     return {
-      id: id++,
       type: 'question_choice',
+      question: '### *Which Services are you looking for?*',
+      id: id++,
       descr: '### *Which Services are you looking for?*',
       choices: [
         [Services.TASK, 'Do Something!'],
@@ -57,6 +59,8 @@ export class AppGateway implements OnGatewayInit {
       multi: false,
       sorted: false,
       sign: false,
+
+      answer: '',
     };
   }
 
@@ -96,6 +100,7 @@ export class AppGateway implements OnGatewayInit {
             min: 0,
             max: 0,
             sign: false,
+            answer: '',
           },
         };
 
@@ -104,9 +109,10 @@ export class AppGateway implements OnGatewayInit {
           logs: { [id - 1]: '### Check Authority..' },
           services: {
             type: 'yn',
-            chat_id: chatId,
+            chat_id: chatId(),
             question: '# Are you admin?',
             id: id++,
+            answer: '',
           },
         };
 
@@ -115,8 +121,8 @@ export class AppGateway implements OnGatewayInit {
           logs: { [id - 1]: '### Select a Country' },
           services: {
             type: 'question_dropdown',
-            id: id++,
             question: '# Which Country?',
+            id: id++,
             descr: 'Choose a Country',
             sorted: false,
             choices: [
@@ -126,6 +132,7 @@ export class AppGateway implements OnGatewayInit {
             ],
             multi: false,
             sign: false,
+            answer: '',
           },
         };
 
@@ -145,32 +152,35 @@ export class AppGateway implements OnGatewayInit {
           logs: { [id - 1]: '### Fill the Form' },
           services: {
             type: 'question_form',
+            question: '# Answer the Qs',
             chat_id: chatId(),
             id: id++,
             description: '# Answer the Qs',
             form: [
               {
                 type: 'question',
-                question: '## Input your data?',
-
                 id: id++,
-                descr: 'aname',
-                returntype: 'string', //can be bool, string, int, uint
-                regex: '.*', //only relevant when string
-                regex_errormsg: '', //shown when regex does not match, if not specified show regex
-                min: 0, //only relevant when (u)int
-                max: 0, //only relevant when (u)int
+                question: '## Input your data?',
+                descr: 'Hello',
+                returntype: 'string',
+                regex: '.*',
+                regex_errormsg: '',
+                min: 0,
+                max: 0,
+                sign: false,
+                answer: '',
               },
               {
                 type: 'yn',
-                chat_id: 0,
+                chat_id: chatId(),
                 question: '# Are you admin?',
                 id: id++,
+                answer: '',
               },
               {
                 type: 'question_dropdown',
-                id: id++,
                 question: '# Which Country?',
+                id: id++,
                 descr: 'Choose a Country',
                 sorted: false,
                 choices: [
@@ -180,6 +190,7 @@ export class AppGateway implements OnGatewayInit {
                 ],
                 multi: false,
                 sign: false,
+                answer: '',
               },
             ],
             sign: false, //if sign then the result will also return a signed field
