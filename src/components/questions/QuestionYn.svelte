@@ -39,12 +39,12 @@
   <div class="is-flex is-justify-content-space-between">
     <div>
       <label>
-        <input type="radio" bind:group={answer} name="scoops" value={true} />
+        <input type="radio" bind:group={answer} name="scoops" value={"yes"} />
         Yes
       </label>
 
       <label>
-        <input type="radio" bind:group={answer} name="scoops" value={false} />
+        <input type="radio" bind:group={answer} name="scoops" value={"no"} />
         No
       </label>
     </div>

@@ -12,6 +12,26 @@
   function deleteLog(log) {
     chatStore.deleteLog(log);
   }
+
+  // const getLog = (log) => {
+  //   const data = JSON.parse(log.data);
+  //   console.log(data);
+  //   if (typeof data === "string") {
+  //     console.log("isStirng");
+  //     return data;
+  //   } else {
+  //     console.log("else");
+  //     let logs = "";
+  //     for (let query of data) {
+  //       logs += `${Object.keys(query)} ${Object.values(query)}\n`;
+  //     }
+  //     return logs;
+  //   }
+  // };
+
+  const getLog = (log) => {
+    return `${log[0]}: ${snarkdown(log[1])}`;
+  };
 </script>
 
 <section
@@ -51,12 +71,17 @@
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.logs as log}
       <div
-        class="is-flex is-justify-content-space-between	"
         style="align-items: center"
+        class="is-flex is-justify-content-space-between	"
       >
         <!-- comment for now. todo better parsing. -->
         <!-- {@html snarkdown(JSON.parse(JSON.parse(log.data)))} -->
-        {log.data}
+        {#each Object.entries(JSON.parse(log.data)) as data}
+          <div class="is-flex is-justify-content-flex-start	">
+            {@html getLog(data)}
+            <br />
+          </div>
+        {/each}
 
         <!-- svelte-ignore a11y-missing-attribute -->
         <a on:click={() => deleteLog(log)}>

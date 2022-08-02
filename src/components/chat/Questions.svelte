@@ -65,6 +65,7 @@
       <div class="card">
         <div class="card-content">
           <div class="content">
+            {question.id}
             <svelte:component this={__getCmp(question)} {question} />
           </div>
         </div>

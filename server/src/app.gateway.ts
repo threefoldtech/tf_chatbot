@@ -45,7 +45,7 @@ export class AppGateway implements OnGatewayInit {
     return {
       id: id++,
       type: 'question_choice',
-      descr: '# `Which Services are you looking for?`',
+      descr: '### *Which Services are you looking for?*',
       choices: [
         [Services.TASK, 'Do Something!'],
         [Services.IS_ADMIN, 'Is Admin!'],
@@ -78,13 +78,13 @@ export class AppGateway implements OnGatewayInit {
     switch (data) {
       case Services.TASK:
         return {
-          logs: '### *Calling the chain...*',
+          logs: { [id - 1]: '### *Calling the chain...*' },
           services: this.handleServicesEvent(),
         };
 
       case Services.ECHO:
         return {
-          logs: data,
+          logs: { [id - 1]: '### Eco a Message.. ' },
           services: {
             type: 'question',
             id: id++,
@@ -101,7 +101,7 @@ export class AppGateway implements OnGatewayInit {
 
       case Services.IS_ADMIN:
         return {
-          logs: JSON.stringify(data),
+          logs: { [id - 1]: '### Check Authority..' },
           services: {
             type: 'yn',
             chat_id: chatId,
@@ -112,7 +112,7 @@ export class AppGateway implements OnGatewayInit {
 
       case Services.COUNTRY:
         return {
-          logs: '# Selected Country',
+          logs: { [id - 1]: '### Select a Country' },
           services: {
             type: 'question_dropdown',
             id: id++,
@@ -131,7 +131,7 @@ export class AppGateway implements OnGatewayInit {
 
       case Services.END_TIME:
         return {
-          logs: '# Choose End of time',
+          logs: { [id - 1]: '### Pick a date' },
           services: {
             type: 'q-date',
             id: id++,
@@ -142,7 +142,7 @@ export class AppGateway implements OnGatewayInit {
 
       case Services.FORM:
         return {
-          logs: '# Fill the specs',
+          logs: { [id - 1]: '### Fill the Form' },
           services: {
             type: 'question_form',
             chat_id: chatId(),
