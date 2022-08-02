@@ -8,11 +8,7 @@ export class ChatServer {
     const socket = get(chatStore).socket;
 
     if (question.id === -1) {
-        return socket.send(JSON.stringify("services", (data: Questions) => {
-        console.log(data, answer)
-        chatStore.answerQuestion(question, answer);
-        chatStore.addQuestion(data);
-      }));
+        return socket.send(JSON.stringify("services"));
     }
 
     /*

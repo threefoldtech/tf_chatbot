@@ -1,76 +1,129 @@
-import { Logger } from '@nestjs/common';
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  OnGatewayInit,
-} from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import Client from 'tfchain_client_ts';
+module main
+
+import net.websocket
+import term
+import json
+import base64
+
+// this server accepts client connections and broadcast all messages to other connected clients
+fn main() {
+	println('press ctrl-c to quit...')
+	start_server()?
+}
+
+fn start_server() ? {
+	mut s := websocket.new_server(.ip6, 8081, '')
+	// Make that in execution test time give time to execute at least one time
+	s.ping_interval = 100
+	s.on_connect(fn (mut s websocket.ServerClient) ?bool {
+		// TODO: Check wether client info matches that of wizard
+		if s.resource_name != '/' {
+			return false
+		}
+		println('Client has connected...')
+		return true
+	})?
+
+	s.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ? {
+		response := handle_message(msg)?
+		ws.write(response.payload, response.opcode) or { panic(err) }
+	})
+
+	s.on_close(fn (mut ws websocket.Client, code int, reason string) ? {
+		println(term.green('client ($ws.id) closed connection'))
+	})
+	s.listen() or { println(term.red('error on server listen: $err')) }
+	unsafe {
+		s.free()
+	}
+}
+
+type Handler = fn ([]u8) []u8
+
+fn handle_message(msg &websocket.Message) ?&websocket.Message {
+	println('Received new message: $msg.payload')
+
+	mut payload := []u8{}
+	if msg.payload.bytestr() == 'services' {
+		payload = handle_services(msg.payload)
+	} else {
+		payload = handle_services(msg.payload)
+	}
+	response := websocket.Message{
+		opcode: msg.opcode
+		payload: payload
+	}
+
+	return &response
+}
+
+struct MCMessage {
+	id          int
+	servicetype string
+	descr       string
+	choices     []string
+	multi       bool
+	sorted      bool
+	sign        bool
+}
+
+fn handle_services(payload []u8) []u8 {
+	response := json.encode(MCMessage{
+		id: 1
+		servicetype: 'question_choice'
+		descr: '# `Which` **service** *are* you [looking](https://www.google.com) for?'
+		choices: [
+			'Ping!',
+			'List Twins!',
+			'Request Service!',
+			'Is Admin!',
+			// [Services.DEPLOY, 'Deploy!'],
+			// [Services.BALANCE, 'Get Balance!'],
+		]
+		multi: false
+		sorted: false
+		sign: false
+	})
+
+	return response.bytes()
+}
 
 enum Services {
-  // INIT = 'init',
-  PING = 'ping',
-  LIST_TWINS = 'list twins',
-  IS_ADMIN = 'isAdmin',
-  OTHER_SERVICES = 'other',
-  // DEPLOY = 'deploy',
-  // BALANCE = 'getBalance',
+	ping
+	list
+	is_admin
+	other
+}
+
+type ServiceChoice = Services | string
+
+struct Service {
+	servicetype    string
+	id             int
+	descr          string
+	returntype     string
+	regex          string
+	regex_errormsg string
+	min            int
+	max            int
+	choices        []ServiceChoice
+	multi          bool
+	sorted         bool
+	sign           bool
 }
 
 interface AskForService {
-  logs: any;
-  services: any;
+	logs string
+	services Service
 }
 
-const deploymentQuestions = {
-  name: 'Name your deployment.',
-  memory: 'Choose your RAM size.',
-  cpu: 'Choose your CPU cores.',
-};
-
-let id = 0;
-
-@WebSocketGateway(8081, {
-  cors: {
-    origin: 'http://localhost:8080',
-  },
-  transports: ['websocket', 'polling'],
-})
-
-
-export class AppGateway implements OnGatewayInit {
-  private readonly logger = new Logger('AppGateway');
-  client;
-
-  async afterInit() {
-    this.logger.log('Initialize!');
-  }
-
-  // @SubscribeMessage('init')
-  // handleInitEvent() {
-  //   console.log('entered init');
-  //   return {
-  //     type: 'question',
-  //     id: id++,
-  //     descr: 'Start using Chatbot with entering your Mnemonices',
-  //     returntype: 'string',
-  //     regex: '.*',
-  //     regex_errormsg: '',
-  //     min: 0,
-  //     max: 0,
-  //     sign: false,
-
-  //     answer: '',
-  //   };
-  // }
-
-
-  @SubscribeMessage('services')
+/*
+@SubscribeMessage('services')
   // respond to the 'services' message with the avilable services.
-  handleServicesEvent() {
-    return {
+  handleServiceasEvent() {
+    return Service{servicetype:, id:, descr:, returntype:, regex:, regex_errormsg:, min:, max:, sign:}{
       id: id++,
-      type: 'question_choice',
+      servicetype: 'question_choice',
       descr:
         '# `Which` **service** *are* you [looking](https://www.google.com) for?',
       choices: [
@@ -171,6 +224,8 @@ export class AppGateway implements OnGatewayInit {
           },
         };
 
+
+
       // case Services.DEPLOY:
       //   // the data here is 'deploy'
       //   return {
@@ -220,3 +275,4 @@ export class AppGateway implements OnGatewayInit {
     }
   }
 }
+*/
