@@ -30,7 +30,7 @@
   // };
 
   const getLog = (log) => {
-    return `${log[0]}: ${snarkdown(log[1])}`;
+    return `${log[0]}: ${log[1]}`;
   };
 </script>
 

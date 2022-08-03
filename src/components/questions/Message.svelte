@@ -5,6 +5,7 @@
   import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
   import chatStore from "../../store/chatStore";
+  import { createEventDispatcher } from 'svelte';
 
   export let question: IMessage;
   export let form: boolean = false;
@@ -28,31 +29,28 @@
 </script>
 
 {#if question}
-<div class="card">
+  <div class="card">
     <div class="card-content">
-        <div class="content">
-          {question.id}
+      <div class="content">
+        {question.id}
         <div>{@html snarkdown(question.message)}</div>
-
-        
       </div>
     </div>
 
-    <footer class="card-footer">
+    {#if !form}
+      <footer class="card-footer">
         {#if question.id !== 0}
-            
-        <button
-          href="#"
-          on:click={onDelete}
-          class="button is-danger is-light card-footer-item">Delete</button
-        >
+          <button
+            on:click={onDelete}
+            class="button is-danger is-light card-footer-item">Delete</button
+          >
         {/if}
 
-      <button
-        href="#"
-        on:click={onSubmit}
-        class="button is-primary is-light card-footer-item">Next</button
-      >
-    </footer>
+        <button
+          on:click={onSubmit}
+          class="button is-primary is-light card-footer-item">Next</button
+        >
+      </footer>
+    {/if}
   </div>
 {/if}
