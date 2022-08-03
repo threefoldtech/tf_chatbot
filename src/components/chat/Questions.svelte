@@ -10,9 +10,7 @@
   import QuestionDropdown from "../questions/QuestionDropdown.svelte";
   import QuestionDate from "../questions/QuestionDate.svelte";
   import QuestionForm from "../questions/QuestionForm.svelte";
-  import Actions from "../Actions.svelte";
-
-  import snarkdown from "snarkdown";
+import Message from "../questions/Message.svelte";
 
   function __getCmp({ type }: Questions) {
     if (type === "yn") return QuestionYn;
@@ -21,6 +19,7 @@
     if (type === "question_dropdown") return QuestionDropdown;
     if (type === "q-date") return QuestionDate;
     if (type === "question_form") return QuestionForm;
+    if (type === 'message') return Message;
   }
 
   const deleteAllQs = () => {
@@ -62,21 +61,8 @@
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.questions as question}
-      <div class="card">
-        <div class="card-content">
-          <div class="content">
-            {question.id}
-            <svelte:component this={__getCmp(question)} {question} />
-          </div>
-        </div>
+      <svelte:component this={__getCmp(question)} {question} />
 
-        <footer class="card-footer">
-          <!-- <a href="#" class="card-footer-item">Save</a>
-          <a href="#" class="card-footer-item">Edit</a>
-          <a href="#" class="card-footer-item">Delete</a> -->
-          <Actions {question} />
-        </footer>
-      </div>
       <br />
     {/each}
   </div>

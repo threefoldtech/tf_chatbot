@@ -1,3 +1,9 @@
+export interface IMessage {
+  type: "message";
+  id: number;
+  message: string;
+}
+
 export interface IQuestion {
   type: "question";
   id: number;
@@ -71,4 +77,5 @@ export type Questions =
   | IQuestionChoice
   | IQuestionDropdown
   | IQuestionDate
-  | IQuestionForm;
+  | IQuestionForm
+  | IMessage;
