@@ -5,7 +5,6 @@
   import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
   import chatStore from "../../store/chatStore";
-  import Actions from "../Actions.svelte";
 
   export let question: IQuestionDropdown;
   export let form: boolean = false;
@@ -36,7 +35,7 @@
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
       oldStore.currentAnswer[question.id] = answer;
-      console.log(oldStore.currentAnswer)
+      // console.log(oldStore.currentAnswer)
       return oldStore;
     });
   };

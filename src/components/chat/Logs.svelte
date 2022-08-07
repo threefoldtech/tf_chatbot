@@ -30,8 +30,8 @@
   // };
 
   const getLog = (log) => {
-    console.log(typeof log[1]);
-    console.log(log[1]);
+    // console.log(typeof log[1]);
+    // console.log(log[1]);
     if (typeof log[1] === "string") return snarkdown(`${log[1]}`);
     return JSON.stringify(log[1]);
   };

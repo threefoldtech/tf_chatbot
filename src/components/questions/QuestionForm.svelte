@@ -13,7 +13,6 @@
   import QuestionInput from "../questions/QuestionInput.svelte";
   import QuestionDropdown from "../questions/QuestionDropdown.svelte";
   import QuestionDate from "../questions/QuestionDate.svelte";
-  import QuestionForm from "../questions/QuestionForm.svelte";
 
   function __getCmp({ type }: Questions) {
     if (type === "yn") return QuestionYn;
@@ -21,7 +20,6 @@
     if (type === "question") return QuestionInput;
     if (type === "question_dropdown") return QuestionDropdown;
     if (type === "q-date") return QuestionDate;
-    if (type === "question_form") return QuestionForm;
   }
 
   export let question: IQuestionForm;
@@ -55,7 +53,7 @@
       answer = store.currentAnswer;
     });
 
-    console.log({ answer });
+    // console.log({ answer });
     // then answer to the server.
     const chatserver = new ChatServer();
     chatserver.answerQuestion(question, answer);

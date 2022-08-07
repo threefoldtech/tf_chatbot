@@ -20,7 +20,7 @@
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
       oldStore.currentAnswer[question.id] = answer;
-      console.log(oldStore.currentAnswer)
+      // console.log(oldStore.currentAnswer)
       return oldStore;
     });
   };
