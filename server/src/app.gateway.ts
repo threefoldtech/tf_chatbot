@@ -200,29 +200,13 @@ export class AppGateway implements OnGatewayInit {
                 question: '## When to end the deployment?',
                 answer: '2022-07-25',
               },
-              {
-                type: 'question_choice',
-                question: '### Dev environment',
-                id: id++,
-                descr: '### Dev environment',
-                choices: [
-                  ['py', 'Python'],
-                  ['ui', 'UI'],
-                  ['ts', 'Typescript'],
-                ],
-                multi: true,
-                sorted: false,
-                sign: false,
-
-                answer: '',
-              },
             ],
             sign: false, //if sign then the result will also return a signed field
           },
         };
       case Services.SKILLS:
         return {
-          logs: '*Choose your skill(s).',
+          logs: { [id - 1]: '*Choose your skill(s).' },
           services: {
             type: 'question_choice',
             question: '### *What are you Good at?*',
@@ -243,7 +227,7 @@ export class AppGateway implements OnGatewayInit {
 
       default: {
         return {
-          logs: data,
+          logs: { [id - 1]: data },
           services: this.handleServicesEvent(),
         };
       }
