@@ -9,9 +9,10 @@
   import chatStore from "../../store/chatStore";
 
   export let question: IQuestion;
+  export let form: boolean = false;
+
   let answer: any = undefined;
   let answered = false;
-  export let form: boolean = false;
 
   function isValid(answer: any) {
     /* not touched yet! */
@@ -41,90 +42,108 @@
   }
 
   $: {
-    if (answer !== undefined) updateAnswer();
+    if (form && answer !== undefined) {
+      updateAnswer();
+    }
   }
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      // if is single question. empty the answer store.
-      if (!form) oldStore.currentAnswer = {};
-
       oldStore.currentAnswer[question.id] = answer;
+      // console.log(oldStore.currentAnswer)
       return oldStore;
     });
   };
-  // function onAnswer() {
-  //   const chatserver = new ChatServer();
-  //   chatserver.answerQuestion(question, question.answer);
-  //   answered = true;
-  // }
+
+  const onDelete = () => {
+    // just update the store to remove the question from UI.
+    chatStore.update((store) => {
+      store.questions = store.questions.filter(
+        (storeQuestion) => storeQuestion.id !== question.id
+      );
+      return store;
+    });
+  };
+
+  const onSubmit = () => {
+    const chatserver = new ChatServer();
+    chatserver.answerQuestion(question, answer);
+  };
 </script>
 
 {#if question}
-  <div>
-    <div>{@html snarkdown(question.question)}</div>
-    {#if !form}
-      <hr />
-    {/if}
+  <div class="card">
+    <div class="card-content">
+      <div class="content">
+        {question.id}
+        <div>{@html snarkdown(question.question)}</div>
 
-    <div class="is-flex is-justify-content-space-between">
-      <div class="field">
-        <div class="control">
-          {#if question.returntype === "string"}
-            <input
-              class="input"
-              type="text"
-              placeholder={question.descr}
-              bind:value={answer}
-              readonly={answered}
-            />
-          {:else if question.returntype === "bool"}
-            <label class="radio">
+        {#if !form}
+          <hr />
+        {/if}
+
+        <div class="field">
+          <div class="control">
+            {#if question.returntype === "string"}
               <input
-                type="radio"
-                name="answer"
-                value={true}
-                bind:group={answer}
+                class="input"
+                type="text"
+                placeholder={question.descr}
+                bind:value={answer}
                 readonly={answered}
-                disabled={answered}
               />
-              Yes
-            </label>
-            <label class="radio">
+            {:else if question.returntype === "bool"}
+              <label class="radio">
+                <input
+                  type="radio"
+                  name="answer"
+                  value={true}
+                  bind:group={answer}
+                  readonly={answered}
+                  disabled={answered}
+                />
+                Yes
+              </label>
+              <label class="radio">
+                <input
+                  type="radio"
+                  name="answer"
+                  value={false}
+                  bind:group={answer}
+                  readonly={answered}
+                  disabled={answered}
+                />
+                No
+              </label>
+            {:else}
               <input
-                type="radio"
-                name="answer"
-                value={false}
-                bind:group={answer}
+                class="input"
+                type="number"
+                placeholder={question.descr}
+                bind:value={answer}
                 readonly={answered}
-                disabled={answered}
               />
-              No
-            </label>
-          {:else}
-            <input
-              class="input"
-              type="number"
-              placeholder={question.descr}
-              bind:value={answer}
-              readonly={answered}
-            />
+            {/if}
+          </div>
+
+          {#if !isValid(answer)}
+            <p class="help is-danger">{getErrorMsg()}</p>
           {/if}
         </div>
-
-        {#if !isValid(answer)}
-          <p class="help is-danger">{getErrorMsg()}</p>
-        {/if}
       </div>
-
-      <!-- <button
-        type="submit"
-        class="button is-primary is-light"
-        disabled={!question.answer}
-        on:click={onAnswer}
-      >
-        Next
-      </button> -->
     </div>
+    {#if !form}
+      <footer class="card-footer">
+        <button
+          on:click={onDelete}
+          class="button is-danger is-light card-footer-item">Delete</button
+        >
+        <button
+          disabled={answer === undefined}
+          on:click={onSubmit}
+          class="button is-primary is-light card-footer-item">Next</button
+        >
+      </footer>
+    {/if}
   </div>
 {/if}

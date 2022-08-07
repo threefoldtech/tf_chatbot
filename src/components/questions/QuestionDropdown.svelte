@@ -2,40 +2,80 @@
 
 <script lang="ts">
   import type { IQuestionDropdown } from "../../types/questions";
+  import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
   import chatStore from "../../store/chatStore";
 
-  export let form: boolean = false;
   export let question: IQuestionDropdown;
-  let answer: any = undefined;
+  export let form: boolean = false;
 
-  // use on:change instead
-  // $: {
-  //   if (answer !== undefined) updateAnswer();
-  // }
+  let answer: any;
+
+  const onDelete = () => {
+    // just update the store to remove the question from UI.
+    chatStore.update((store) => {
+      store.questions = store.questions.filter(
+        (storeQuestion) => storeQuestion.id !== question.id
+      );
+      return store;
+    });
+  };
+
+  const onSubmit = () => {
+    const chatserver = new ChatServer();
+    chatserver.answerQuestion(question, answer);
+  };
+
+  $: {
+    if (form && answer !== undefined) {
+      updateAnswer();
+    }
+  }
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      // if is single question. empty the answer store.
-      if (!form) oldStore.currentAnswer = {};
       oldStore.currentAnswer[question.id] = answer;
+      // console.log(oldStore.currentAnswer)
       return oldStore;
     });
   };
+
 </script>
 
 {#if question}
-  <div>{@html snarkdown(question.question)}</div>
-  {#if !form}
-    <hr />
-  {/if}
+  <div class="card">
+    <div class="card-content">
+      <div class="content">
+        {question.id}
+        <div>{@html snarkdown(question.question)}</div>
 
-  <div class="select">
-    <select bind:value={answer} on:change={updateAnswer}>
-      <option disabled value="">{question.descr}...</option>
-      {#each question.choices as choice}
-        <option value={choice[1]}>{choice[1]}</option>
-      {/each}
-    </select>
+        {#if !form}
+          <hr />
+        {/if}
+
+        <div class="select">
+          <select bind:value={answer}>
+            <option disabled value={undefined}>{question.descr}...</option>
+            {#each question.choices as choice}
+              <option value={choice[1]}>{choice[1]}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    {#if !form}
+      <footer class="card-footer">
+        <button
+          on:click={onDelete}
+          class="button is-danger is-light card-footer-item">Delete</button
+        >
+        <button
+          disabled={answer === undefined}
+          on:click={onSubmit}
+          class="button is-primary is-light card-footer-item">Next</button
+        >
+      </footer>
+    {/if}
   </div>
 {/if}

@@ -3,62 +3,107 @@
 <script lang="ts">
   import type { IQuestionChoice } from "../../types/questions";
   import { isEmpty } from "../../utils/isEmpty";
-  import AnswerBtn from "../AnswerBtn.svelte";
   import { ChatServer } from "../../services/chatServer";
+  import AnswerBtn from "../AnswerBtn.svelte";
+  import snarkdown from "snarkdown";
+  import chatStore from "../../store/chatStore";
 
   export let question: IQuestionChoice;
+  export let form: boolean;
 
-  import snarkdown from "snarkdown";
+  let answer: any;
 
   let selectedChoices: any[] = [];
+
   function onToggleAnswer(answer: any) {
     return () => {
       if (!question.multi) {
-        selectedChoices = [answer];
-        return onSubmitAnswer(answer);
+        selectedChoices = answer;
+        return onSubmitAnswer();
       }
 
+      // toggle push/pop from selected and from store
       const index = selectedChoices.findIndex((a) => a === answer);
-      if (index === 0) selectedChoices = [...selectedChoices, answer];
-      else selectedChoices = selectedChoices.filter((a) => a !== answer);
+      
+
+      if (index === -1) {
+
+        selectedChoices.push(answer);
+
+        // chatStore.update((oldStore) => {
+        //   oldStore.currentAnswer[question.id] = selectedChoices
+        //   console.log(oldStore.currentAnswer);
+        //   return oldStore;
+        // });
+      } else {
+        
+        selectedChoices = selectedChoices.filter((a) => a !== answer);
+
+        // chatStore.update((oldStore) => {
+        //   oldStore.currentAnswer[question.id] = selectedChoices
+        //   console.log(oldStore.currentAnswer);
+        //   return oldStore;
+        // });
+      }
+
+      // if (index === 0) selectedChoices = [...selectedChoices, answer];
     };
   }
 
-  function onSubmitAnswer(answer: any) {
+  function onSubmitAnswer() {
     const chatserver = new ChatServer();
-    chatserver.answerQuestion(question, answer);
+    chatserver.answerQuestion(question, selectedChoices);
   }
+
+  const onDelete = () => {
+    // just update the store to remove the question from UI.
+    chatStore.update((store) => {
+      store.questions = store.questions.filter(
+        (storeQuestion) => storeQuestion.id !== question.id
+      );
+      return store;
+    });
+  };
 </script>
 
 {#if question}
-  <div>
-    <div>{@html snarkdown(question.descr)}</div>
-    {#if question.id !== 0}
-      <hr />
-    {/if}
+  <div class="card">
+    <div class="card-content">
+      <div class="content">
+        {question.id}
+        <div>{@html snarkdown(question.descr)}</div>
 
-    {#each question.choices as [value, label] (label)}
-      <AnswerBtn
-        text={label}
-        disabled={!isEmpty(question.answer) && !selectedChoices.includes(value)}
-        readonly={!isEmpty(question.answer) && selectedChoices.includes(value)}
-        outlined={!selectedChoices.includes(value)}
-        on:click={!isEmpty(question.answer) ? undefined : onToggleAnswer(value)}
-      />
-    {/each}
+        {#if !form}
+          <hr />
+        {/if}
 
-    {#if question.multi && isEmpty(question.answer)}
-      <div class="is-flex is-justify-content-flex-end">
-        <button
-          class="button is-primary is-light"
-          disabled={selectedChoices.length === 0}
-          on:click={!isEmpty(question.answer)
-            ? undefined
-            : () => onSubmitAnswer(selectedChoices)}
-        >
-          Next
-        </button>
+        {#each question.choices as [value, label]}
+          <AnswerBtn
+            text={label}
+            disabled={!isEmpty(answer) && !selectedChoices.includes(value)}
+            readonly={!isEmpty(question.answer) &&
+              selectedChoices.includes(value)}
+            selected={selectedChoices.includes(value)}
+            on:click={!isEmpty(answer) ? undefined : onToggleAnswer(value)}
+          />
+        {/each}
       </div>
+    </div>
+
+    {#if !form}
+      <footer class="card-footer">
+        <button
+          on:click={onDelete}
+          class="button is-danger is-light card-footer-item">Delete</button
+        >
+        {#if question.multi}
+          <button
+            disabled={selectedChoices === []}
+            on:click={onSubmitAnswer}
+            class="button is-primary is-light card-footer-item">Next</button
+          >
+        {/if}
+      </footer>
     {/if}
   </div>
 {/if}

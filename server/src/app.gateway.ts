@@ -1,4 +1,4 @@
-import { Questions } from './../../src/types/questions';
+import { Questions } from './types/questions';
 import { v4 } from 'uuid';
 import { Logger } from '@nestjs/common';
 import {
@@ -16,6 +16,7 @@ enum Services {
   COUNTRY = 'country', // dropmenu question
   END_TIME = 'end time', // date question
   FORM = 'form',
+  SKILLS = 'skills',
 }
 
 interface AskForService {
@@ -55,6 +56,7 @@ export class AppGateway implements OnGatewayInit {
         [Services.COUNTRY, 'Choose Country!'],
         [Services.END_TIME, 'When to delete!'],
         [Services.FORM, 'Deployment Specs!'],
+        [Services.SKILLS, 'Select Skills!'],
       ],
       multi: false,
       sorted: false,
@@ -160,8 +162,8 @@ export class AppGateway implements OnGatewayInit {
               {
                 type: 'question',
                 id: id++,
-                question: '## Input your data?',
-                descr: 'Hello',
+                question: '### What is the name of your VM?',
+                descr: 'VM Name',
                 returntype: 'string',
                 regex: '.*',
                 regex_errormsg: '',
@@ -173,33 +175,59 @@ export class AppGateway implements OnGatewayInit {
               {
                 type: 'yn',
                 chat_id: chatId(),
-                question: '# Are you admin?',
+                question: '### Public Ip?',
                 id: id++,
                 answer: '',
               },
               {
                 type: 'question_dropdown',
-                question: '# Which Country?',
+                question: '### Choose package',
                 id: id++,
-                descr: 'Choose a Country',
+                descr: '### Choose package',
                 sorted: false,
                 choices: [
-                  [false, 'Home'],
-                  [true, 'Egypt'],
-                  [false, 'Belguim'],
+                  [false, 'Silver'],
+                  [true, 'Gold'],
+                  [false, 'Platinum'],
                 ],
                 multi: false,
                 sign: false,
                 answer: '',
               },
+              {
+                type: 'q-date',
+                id: id++,
+                question: '## When to end the deployment?',
+                answer: '2022-07-25',
+              },
             ],
             sign: false, //if sign then the result will also return a signed field
+          },
+        };
+      case Services.SKILLS:
+        return {
+          logs: { [id - 1]: '*Choose your skill(s).' },
+          services: {
+            type: 'question_choice',
+            question: '### *What are you Good at?*',
+            id: id++,
+            descr: '### *What are you Good at?*',
+            choices: [
+              ['py', 'Python'],
+              ['ui', 'UI'],
+              ['ts', 'Typescript'],
+            ],
+            multi: true,
+            sorted: false,
+            sign: false,
+
+            answer: '',
           },
         };
 
       default: {
         return {
-          logs: data,
+          logs: { [id - 1]: data },
           services: this.handleServicesEvent(),
         };
       }

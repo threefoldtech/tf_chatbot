@@ -2,32 +2,73 @@
 
 <script lang="ts">
   import type { IQuestionDate } from "../../types/questions";
+  import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
   import chatStore from "../../store/chatStore";
 
   export let question: IQuestionDate;
-  let answer: any = undefined;
   export let form: boolean = false;
 
+  let answer: any = undefined;
+
   $: {
-    if (answer !== undefined) updateAnswer();
+    if (form && answer !== undefined) {
+      updateAnswer();
+    }
   }
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      // if is single question. empty the answer store.
-      if (!form) oldStore.currentAnswer = {};
       oldStore.currentAnswer[question.id] = answer;
+      // console.log(oldStore.currentAnswer)
       return oldStore;
     });
+  };
+
+  const onDelete = () => {
+    // just update the store to remove the question from UI.
+    chatStore.update((store) => {
+      store.questions = store.questions.filter(
+        (storeQuestion) => storeQuestion.id !== question.id
+      );
+      return store;
+    });
+  };
+
+  const onSubmit = () => {
+    const chatserver = new ChatServer();
+    chatserver.answerQuestion(question, answer);
   };
 </script>
 
 {#if question}
-  <div>{@html snarkdown(question.question)}</div>
-  {#if !form}
-    <hr />
-  {/if}
+  <div class="card">
+    <div class="card-content">
+      <div class="content">
+        {question.id}
+        <div>{@html snarkdown(question.question)}</div>
 
-  <input type="date" bind:value={answer} />
+        {#if !form}
+          <hr />
+        {/if}
+        <input type="date" bind:value={answer} />
+      </div>
+    </div>
+
+    {#if !form}
+
+    <footer class="card-footer">
+      <button
+        on:click={onDelete}
+        class="button is-danger is-light card-footer-item">Delete</button
+      >
+      <button
+        disabled={answer === undefined}
+        on:click={onSubmit}
+        class="button is-primary is-light card-footer-item">Next</button
+      >
+    </footer>
+    {/if}
+
+  </div>
 {/if}

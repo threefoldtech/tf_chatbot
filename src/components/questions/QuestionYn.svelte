@@ -7,54 +7,87 @@
   import chatStore from "../../store/chatStore";
 
   export let question: IQuestionYn;
-  let answer: any;
   export let form: boolean = false;
 
+  let answer: any;
+
   $: {
-    if (answer !== undefined) updateAnswer();
+    if (form && answer !== undefined) {
+      updateAnswer();
+    }
   }
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      // if is single question. empty the answer store.
-      if (!form) oldStore.currentAnswer = {};
       oldStore.currentAnswer[question.id] = answer;
+      // console.log(oldStore.currentAnswer)
       return oldStore;
     });
   };
 
-  // const onSubmit = () => {
-  //   console.log(question.answer);
-  //   const chatserver = new ChatServer();
-  //   chatserver.answerQuestion(question, question.answer);
-  // };
+  const onDelete = () => {
+    // just update the store to remove the question from UI.
+    chatStore.update((store) => {
+      store.questions = store.questions.filter(
+        (storeQuestion) => storeQuestion.id !== question.id
+      );
+      return store;
+    });
+  };
+
+  const onSubmit = () => {
+    const chatserver = new ChatServer();
+    chatserver.answerQuestion(question, answer);
+  };
 </script>
 
 {#if question}
-  <div>{@html snarkdown(question.question)}</div>
-  {#if !form}
-    <hr />
-  {/if}
+  <div class="card">
+    <div class="card-content">
+      <div class="content">
+        {question.id}
+        <div>{@html snarkdown(question.question)}</div>
 
-  <div class="is-flex is-justify-content-space-between">
-    <div>
-      <label>
-        <input type="radio" bind:group={answer} name="scoops" value={"yes"} />
-        Yes
-      </label>
+        {#if !form}
+          <hr />
+        {/if}
 
-      <label>
-        <input type="radio" bind:group={answer} name="scoops" value={"no"} />
-        No
-      </label>
+        <div>
+          <label>
+            <input
+              type="radio"
+              bind:group={answer}
+              name="scoops"
+              value={"yes"}
+            />
+            Yes
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              bind:group={answer}
+              name="scoops"
+              value={"no"}
+            />
+            No
+          </label>
+        </div>
+      </div>
     </div>
-    <!-- <button
-      type="submit"
-      class="button is-primary is-light"
-      disabled={question.answer === undefined}
-      on:click={onSubmit}
-    >
-      Next
-    </button> -->
+
+    {#if !form}
+      <footer class="card-footer">
+        <button
+          on:click={onDelete}
+          class="button is-danger is-light card-footer-item">Delete</button
+        >
+        <button
+          disabled={answer === undefined}
+          on:click={onSubmit}
+          class="button is-primary is-light card-footer-item">Next</button
+        >
+      </footer>
+    {/if}
   </div>
 {/if}

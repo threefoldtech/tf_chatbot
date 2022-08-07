@@ -30,7 +30,10 @@
   // };
 
   const getLog = (log) => {
-    return `${log[0]}: ${snarkdown(log[1])}`;
+    // console.log(typeof log[1]);
+    // console.log(log[1]);
+    if (typeof log[1] === "string") return snarkdown(`${log[1]}`);
+    return JSON.stringify(log[1]);
   };
 </script>
 
@@ -76,10 +79,13 @@
       >
         <!-- comment for now. todo better parsing. -->
         <!-- {@html snarkdown(JSON.parse(JSON.parse(log.data)))} -->
+        <!-- {console.log(Object.values(JSON.parse(log.data)))} -->
+
+        <!-- {@html snarkdown(`${Object.values(JSON.parse(log.data))}`)} -->
         {#each Object.entries(JSON.parse(log.data)) as data}
           <div class="is-flex is-justify-content-flex-start	">
-            {@html getLog(data)}
             <br />
+            {@html getLog(data)}
           </div>
         {/each}
 
