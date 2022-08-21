@@ -12,6 +12,7 @@ export default class WsChatServer implements IChatServer {
 
   listServices(question: Questions, answer: any) {
     chatStore.answerQuestion(question, answer);
+    return this.socket.send(JSON.stringify({ event: "task", data: `{ "id": 12 }` }))
 
     // return this.socket.emit("services", (data: Questions) => {
     //   chatStore.answerQuestion(question, answer);
@@ -21,6 +22,7 @@ export default class WsChatServer implements IChatServer {
 
   askForService(question: Questions, answer: any) {
     chatStore.answerQuestion(question, answer);
+    // return this.socket.send(JSON.stringify({foo:"task"}))
 
     // return this.socket.emit(
     //   "askForService",

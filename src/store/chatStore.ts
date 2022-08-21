@@ -32,9 +32,18 @@ function createChatStore() {
     ],
     questions: [
       {
+        type: 'question_choice',
+        question: '### *Which Services are you looking for?*',
         id: 0,
-        type: "message",
-        message: "Welcome in threefold chatbot",
+        descr: '### *Which Services are you looking for?*',
+        choices: [
+          ['task', 'Do Something!'],
+        ],
+        multi: false,
+        sorted: false,
+        sign: false,
+  
+        answer: '',
       },
     ],
     logs: [],
@@ -65,6 +74,23 @@ function createChatStore() {
 
   socket.onopen = __updateConnected(true);
   socket.onclose = __onCloseSocket;
+  
+  socket.onmessage = (res) => {
+    // this.answerQuestion(question, answer);
+    // this.pushLogs(question.id, logs);
+    // this.addQuestion(services);
+
+    // console.log(res)
+    const data = JSON.parse(res.data)
+    console.log(data)
+
+    store.update((store)=>{
+      store.questions.push(data.question)
+      return store
+    })
+
+    
+  }
 
   const { subscribe, set, update } = store;
 
