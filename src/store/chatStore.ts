@@ -17,7 +17,7 @@ interface Log {
 }
 
 function createChatStore() {
-  const socket = new WebSocket("ws://localhost:8081");
+  let socket = new WebSocket("ws://localhost:8081");
 
   const store = writable<ChatStore>({
     open: false,
@@ -41,8 +41,6 @@ function createChatStore() {
     currentAnswer: {},
   });
 
-  socket.onopen = __updateConnected(true);
-  socket.onclose = __updateConnected(false);
   function __updateConnected(connected: boolean) {
     return () => {
       store.update((store) => {
@@ -51,6 +49,22 @@ function createChatStore() {
       });
     };
   }
+
+  function __onCloseSocket() {
+    __updateConnected(false)();
+
+    socket = new WebSocket("ws://localhost:8081");
+    socket.onopen = __updateConnected(true);
+    socket.onclose = __onCloseSocket;
+
+    store.update((store) => {
+      store.socket = socket;
+      return store;
+    });
+  }
+
+  socket.onopen = __updateConnected(true);
+  socket.onclose = __onCloseSocket;
 
   const { subscribe, set, update } = store;
 
