@@ -21,7 +21,7 @@ function createChatStore() {
   const socket = io("ws://localhost:8081");
 
   const store = writable<ChatStore>({
-    open: true,
+    open: false,
     socket,
     connected: false,
     initQuestions: [
