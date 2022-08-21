@@ -4,10 +4,17 @@ import { io, Socket } from "socket.io-client";
 
 interface ChatStore {
   open: boolean;
+  initQuestions: Questions[];
   questions: Questions[];
-  logs: string[];
+  logs: Log[];
   socket: Socket;
   connected: boolean;
+  currentAnswer: {};
+}
+
+interface Log {
+  id: number;
+  data: string;
 }
 
 function createChatStore() {
@@ -17,55 +24,22 @@ function createChatStore() {
     open: true,
     socket,
     connected: false,
+    initQuestions: [
+      {
+        id: 0,
+        type: "message",
+        message: "Welcome in threefold chatbot",
+      },
+    ],
     questions: [
       {
-        id: -1,
-        type: "question_choice",
-        descr: "Welcome in threefold chatbot",
-        choices: [[true, "Show More!"]],
-        multi: false,
-        sorted: false,
-        sign: false,
-        answer: null,
+        id: 0,
+        type: "message",
+        message: "Welcome in threefold chatbot",
       },
-      // {
-      //   type: "question",
-      //   id: 10,
-      //   descr: "aname",
-      //   returntype: "string", //can be bool, string, int, uint
-      //   regex: "\\w+", //only relevant when string
-      //   regex_errormsg: "can only be a name with a...z, and A...Z", //shown when regex does not match, if not specified show regex
-      //   min: 0, //only relevant when (u)int
-      //   max: 0, //only relevant when (u)int
-      //   sign: false, //if sign then the result will also return a signed field
-      //   answer: null,
-      // },
-      // {
-      //   type: "question",
-      //   id: 12,
-      //   descr: "aname",
-      //   returntype: "int", //can be bool, string, int, uint
-      //   regex: "\\w+", //only relevant when string
-      //   regex_errormsg: "can only be a name with a...z, and A...Z", //shown when regex does not match, if not specified show regex
-      //   min: 1, //only relevant when (u)int
-      //   max: 10, //only relevant when (u)int
-      //   sign: false, //if sign then the result will also return a signed field
-      //   answer: null,
-      // },
-      // {
-      //   type: "question",
-      //   id: 11,
-      //   descr: "aname",
-      //   returntype: "bool", //can be bool, string, int, uint
-      //   regex: "", //only relevant when string
-      //   regex_errormsg: "", //shown when regex does not match, if not specified show regex
-      //   min: 0, //only relevant when (u)int
-      //   max: 0, //only relevant when (u)int
-      //   sign: false, //if sign then the result will also return a signed field
-      //   answer: null,
-      // },
     ],
     logs: [],
+    currentAnswer: {},
   });
 
   socket.on("connect", __updateConnected(true));
@@ -84,9 +58,32 @@ function createChatStore() {
   return {
     subscribe,
     set,
+    update,
     addQuestion(question: Questions) {
       return update((store) => {
         store.questions.push(question);
+        return store;
+      });
+    },
+    cleanStore() {
+      return update((store) => {
+        store.questions = store.initQuestions;
+        store.logs = [];
+        return store;
+      });
+    },
+    deleteQuestion(questionId) {
+      return update((store) => {
+        store.questions = store.questions.filter(
+          (question) => question.id !== questionId
+        );
+
+        return store;
+      });
+    },
+    deleteLog(deletedLog) {
+      return update((store) => {
+        store.logs = store.logs.filter((log) => log.id !== deletedLog.id);
         return store;
       });
     },
@@ -94,15 +91,17 @@ function createChatStore() {
       return update((store) => {
         store.questions = store.questions.map((q) => {
           if (q !== question) return q;
-          q.answer = answer;
+          // keep all the questions unanswered to enable edit/delete
+          // q.answer = answer;
+          // store.currentAnswer = answer;
           return q;
         });
         return store;
       });
     },
-    pushLogs(data: any) {
+    pushLogs(id: number, data: any) {
       return update((store) => {
-        store.logs.push(JSON.stringify(data));
+        store.logs.push({ id, data: JSON.stringify(data) });
         return store;
       });
     },

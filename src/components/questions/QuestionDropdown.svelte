@@ -1,29 +1,15 @@
-<svelte:options tag="tf-question-yn" />
+<svelte:options tag="tf-question-dropdown" />
 
 <script lang="ts">
-  import type { IQuestionYn } from "../../types/questions";
+  import type { IQuestionDropdown } from "../../types/questions";
   import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
   import chatStore from "../../store/chatStore";
 
-  export let question: IQuestionYn;
+  export let question: IQuestionDropdown;
   export let form: boolean = false;
 
   let answer: any;
-
-  $: {
-    if (form && answer !== undefined) {
-      updateAnswer();
-    }
-  }
-
-  const updateAnswer = () => {
-    chatStore.update((oldStore) => {
-      oldStore.currentAnswer[question.id] = answer;
-      // console.log(oldStore.currentAnswer)
-      return oldStore;
-    });
-  };
 
   const onDelete = () => {
     // just update the store to remove the question from UI.
@@ -39,6 +25,21 @@
     const chatserver = new ChatServer();
     chatserver.answerQuestion(question, answer);
   };
+
+  $: {
+    if (form && answer !== undefined) {
+      updateAnswer();
+    }
+  }
+
+  const updateAnswer = () => {
+    chatStore.update((oldStore) => {
+      oldStore.currentAnswer[question.id] = answer;
+      // console.log(oldStore.currentAnswer)
+      return oldStore;
+    });
+  };
+
 </script>
 
 {#if question}
@@ -52,26 +53,13 @@
           <hr />
         {/if}
 
-        <div>
-          <label>
-            <input
-              type="radio"
-              bind:group={answer}
-              name="scoops"
-              value={"yes"}
-            />
-            Yes
-          </label>
-
-          <label>
-            <input
-              type="radio"
-              bind:group={answer}
-              name="scoops"
-              value={"no"}
-            />
-            No
-          </label>
+        <div class="select">
+          <select bind:value={answer}>
+            <option disabled value={undefined}>{question.descr}...</option>
+            {#each question.choices as choice}
+              <option value={choice[1]}>{choice[1]}</option>
+            {/each}
+          </select>
         </div>
       </div>
     </div>

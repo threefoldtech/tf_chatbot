@@ -1,15 +1,15 @@
-<svelte:options tag="tf-question-yn" />
+<svelte:options tag="tf-question-date" />
 
 <script lang="ts">
-  import type { IQuestionYn } from "../../types/questions";
+  import type { IQuestionDate } from "../../types/questions";
   import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
   import chatStore from "../../store/chatStore";
 
-  export let question: IQuestionYn;
+  export let question: IQuestionDate;
   export let form: boolean = false;
 
-  let answer: any;
+  let answer: any = undefined;
 
   $: {
     if (form && answer !== undefined) {
@@ -51,43 +51,24 @@
         {#if !form}
           <hr />
         {/if}
-
-        <div>
-          <label>
-            <input
-              type="radio"
-              bind:group={answer}
-              name="scoops"
-              value={"yes"}
-            />
-            Yes
-          </label>
-
-          <label>
-            <input
-              type="radio"
-              bind:group={answer}
-              name="scoops"
-              value={"no"}
-            />
-            No
-          </label>
-        </div>
+        <input type="date" bind:value={answer} />
       </div>
     </div>
 
     {#if !form}
-      <footer class="card-footer">
-        <button
-          on:click={onDelete}
-          class="button is-danger is-light card-footer-item">Delete</button
-        >
-        <button
-          disabled={answer === undefined}
-          on:click={onSubmit}
-          class="button is-primary is-light card-footer-item">Next</button
-        >
-      </footer>
+
+    <footer class="card-footer">
+      <button
+        on:click={onDelete}
+        class="button is-danger is-light card-footer-item">Delete</button
+      >
+      <button
+        disabled={answer === undefined}
+        on:click={onSubmit}
+        class="button is-primary is-light card-footer-item">Next</button
+      >
+    </footer>
     {/if}
+
   </div>
 {/if}

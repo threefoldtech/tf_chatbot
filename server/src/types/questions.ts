@@ -1,15 +1,15 @@
 export interface IMessage {
-  type: "message";
+  type: 'message';
   id: number;
   message: string;
 }
 
 export interface IQuestion {
-  type: "question";
+  type: 'question';
   id: number;
   question: string;
   descr: string;
-  returntype: "string" | "bool" | "uint" | "int";
+  returntype: 'string' | 'bool' | 'uint' | 'int';
   regex: string;
   regex_errormsg: string;
   min: number;
@@ -20,7 +20,7 @@ export interface IQuestion {
 }
 
 export interface IQuestionYn {
-  type: "yn";
+  type: 'yn';
   chat_id: string;
   question: string;
   id: number;
@@ -29,7 +29,7 @@ export interface IQuestionYn {
 }
 
 export interface IQuestionChoice {
-  type: "question_choice";
+  type: 'question_choice';
   question: string;
   id: number;
   descr: string;
@@ -42,7 +42,7 @@ export interface IQuestionChoice {
 }
 
 export interface IQuestionDropdown {
-  type: "question_dropdown";
+  type: 'question_dropdown';
   question: string;
   id: number;
   descr: string;
@@ -55,14 +55,14 @@ export interface IQuestionDropdown {
 }
 
 export interface IQuestionDate {
-  type: "q-date";
+  type: 'q-date';
   id: number;
   question: string;
   answer: any;
 }
 
 export interface IQuestionForm {
-  type: "question_form";
+  type: 'question_form';
   question: string;
   chat_id: string;
   id: number;
