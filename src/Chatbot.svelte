@@ -3,6 +3,9 @@
 <script lang="ts">
   import Chat from "./components/Chat.svelte";
   import OpenChat from "./components/OpenChat.svelte";
+  import { GridClient } from "grid3_client";
+
+  console.log(GridClient);
 </script>
 
 <section
@@ -11,7 +14,7 @@
   style:font-size="1em"
   style:font-weight="400"
   style:line-height="1.5"
-  >
+>
   <!-- Start global css style for all components -->
   <style>
     [nice-scroll]::-webkit-scrollbar {
