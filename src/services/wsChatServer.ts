@@ -21,9 +21,13 @@ export default class WsChatServer implements IChatServer {
   }
 
   askForService(question: Questions, answer: any) {
-    chatStore.answerQuestion(question, answer);
+    console.log('from server')
+    console.log({answer})
+    this.socket.send(JSON.stringify({ event: 'echo', data: JSON.stringify(answer)}))
+    // chatStore.answerQuestion(question, answer);
     // return this.socket.send(JSON.stringify({foo:"task"}))
 
+    // return chatStore.answerQuestion(question, answer)
     // return this.socket.emit(
     //   "askForService",
     //   answer,

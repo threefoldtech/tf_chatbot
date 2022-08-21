@@ -12,14 +12,14 @@
   import QuestionForm from "../questions/QuestionForm.svelte";
 import Message from "../questions/Message.svelte";
 
-  function __getCmp({ type }: Questions) {
-    if (type === "yn") return QuestionYn;
-    if (type === "question_choice") return QuestionChoice;
-    if (type === "question") return QuestionInput;
-    if (type === "question_dropdown") return QuestionDropdown;
-    if (type === "q-date") return QuestionDate;
-    if (type === "question_form") return QuestionForm;
-    if (type === 'message') return Message;
+  function __getCmp({ q_type }: Questions) {
+    if (q_type === "yn") return QuestionYn;
+    if (q_type === "choices") return QuestionChoice;
+    if (q_type === "input") return QuestionInput;
+    if (q_type === "menu") return QuestionDropdown;
+    if (q_type === "date") return QuestionDate;
+    if (q_type === "form") return QuestionForm;
+    if (q_type === 'message') return Message;
   }
 
   const deleteAllQs = () => {

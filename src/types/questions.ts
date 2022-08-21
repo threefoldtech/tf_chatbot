@@ -1,11 +1,11 @@
 export interface IMessage {
-  type: "message";
+  q_type: "message";
   id: number;
   message: string;
 }
 
 export interface IQuestion {
-  type: "question";
+  q_type: "input";
   id: number;
   question: string;
   descr: string;
@@ -20,7 +20,7 @@ export interface IQuestion {
 }
 
 export interface IQuestionYn {
-  type: "yn";
+  q_type: "yn";
   chat_id: string;
   question: string;
   id: number;
@@ -29,7 +29,7 @@ export interface IQuestionYn {
 }
 
 export interface IQuestionChoice {
-  type: "question_choice";
+  q_type: "choices";
   question: string;
   id: number;
   descr: string;
@@ -42,7 +42,7 @@ export interface IQuestionChoice {
 }
 
 export interface IQuestionDropdown {
-  type: "question_dropdown";
+  q_type: "menu";
   question: string;
   id: number;
   descr: string;
@@ -55,14 +55,14 @@ export interface IQuestionDropdown {
 }
 
 export interface IQuestionDate {
-  type: "q-date";
+  q_type: "date";
   id: number;
   question: string;
   answer: any;
 }
 
 export interface IQuestionForm {
-  type: "question_form";
+  q_type: "form";
   question: string;
   chat_id: string;
   id: number;

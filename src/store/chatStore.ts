@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import type { Questions } from "../types/questions";
 
 interface ChatStore {
@@ -26,13 +26,13 @@ function createChatStore() {
     initQuestions: [
       {
         id: 0,
-        type: "message",
+        q_type: "message",
         message: "Welcome in threefold chatbot",
       },
     ],
     questions: [
       {
-        type: "question_choice",
+        q_type: "choices",
         question: "### *Which Services are you looking for?*",
         id: 0,
         descr: "### *Which Services are you looking for?*",
@@ -127,6 +127,7 @@ function createChatStore() {
     },
   };
 
+  console.log(get(store))
   socket.onmessage = (res) => {
     // this.answerQuestion(question, answer);
     // this.pushLogs(question.id, logs);
@@ -137,8 +138,10 @@ function createChatStore() {
     console.log(data);
 
     fullStore.addQuestion(data.question);
+    
+    console.log(get(fullStore))
   };
-
+  
   return fullStore;
 }
 

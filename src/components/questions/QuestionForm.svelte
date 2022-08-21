@@ -14,12 +14,12 @@
   import QuestionDropdown from "../questions/QuestionDropdown.svelte";
   import QuestionDate from "../questions/QuestionDate.svelte";
 
-  function __getCmp({ type }: Questions) {
-    if (type === "yn") return QuestionYn;
-    if (type === "question_choice") return QuestionChoice;
-    if (type === "question") return QuestionInput;
-    if (type === "question_dropdown") return QuestionDropdown;
-    if (type === "q-date") return QuestionDate;
+  function __getCmp({ q_type }: Questions) {
+    if (q_type === "yn") return QuestionYn;
+    if (q_type === "choices") return QuestionChoice;
+    if (q_type === "input") return QuestionInput;
+    if (q_type === "menu") return QuestionDropdown;
+    if (q_type === "date") return QuestionDate;
   }
 
   export let question: IQuestionForm;
@@ -53,9 +53,11 @@
       answer = store.currentAnswer;
     });
 
-    // console.log({ answer });
+    console.log('from form')
+    console.log({ answer });
     // then answer to the server.
     const chatserver = new ChatServer();
+    console.log(chatserver)
     chatserver.answerQuestion(question, answer);
   };
 </script>
@@ -64,7 +66,7 @@
   <div class="card">
     <div class="card-content">
       <div class="content">
-        <div>{@html snarkdown(question.description)}</div>
+        <div>{@html snarkdown(question.question)}</div>
         <hr />
 
         <form>
