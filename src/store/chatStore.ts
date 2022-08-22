@@ -1,6 +1,30 @@
 import { get, writable } from "svelte/store";
 import type { Questions } from "../types/questions";
 
+import {
+  GridClient,
+  NetworkEnv,
+  BackendStorageType,
+  KeypairType,
+} from "grid3_client";
+import { HTTPMessageBusClient } from "ts-rmb-http-client";
+
+const RMB = new HTTPMessageBusClient(0, "", "", "");
+
+function getGrid(mnemonic: string, secret: string) {
+  const grid = new GridClient(
+    NetworkEnv.dev,
+    mnemonic,
+    secret,
+    RMB,
+    undefined,
+    BackendStorageType.auto,
+    KeypairType.sr25519
+  );
+
+  return grid.connect().then(() => grid);
+}
+
 interface ChatStore {
   open: boolean;
   initQuestions: Questions[];
@@ -40,6 +64,7 @@ function createChatStore() {
         multi: false,
         sorted: false,
         sign: false,
+        symbol: "init",
 
         answer: "",
       },
@@ -127,21 +152,32 @@ function createChatStore() {
     },
   };
 
-  console.log(get(store))
-  socket.onmessage = (res) => {
-    // this.answerQuestion(question, answer);
-    // this.pushLogs(question.id, logs);
-    // this.addQuestion(services);
+  console.log(get(store));
 
-    // console.log(res)
-    const data = JSON.parse(res.data);
+  socket.onmessage = async (event: MessageEvent) => {
+    const data = JSON.parse(event.data);
     console.log(data);
 
-    fullStore.addQuestion(data.question);
-    
-    console.log(get(fullStore))
+    if (data.event == "invoke") {
+      const req = JSON.parse(data.data);
+      const grid = await getGrid("mom picnic deliver again rug night rabbit music motion hole lion where", "secret")
+      const result = await grid.invoke(req.function, JSON.parse(req.args));
+      console.log(result)
+      socket.send(
+        JSON.stringify({
+          id: data.id,
+          event: "invoke_result",
+          data: JSON.stringify(result),
+        })
+      );
+      console.log("result sent: ", result);
+    } else {
+      fullStore.addQuestion(data.question);
+
+      console.log(get(fullStore));
+    }
   };
-  
+
   return fullStore;
 }
 

@@ -15,6 +15,7 @@ export interface IQuestion {
   min: number;
   max: number;
   sign: boolean;
+  symbol: string,
 
   answer: any;
 }
@@ -24,6 +25,7 @@ export interface IQuestionYn {
   chat_id: string;
   question: string;
   id: number;
+  symbol: string,
 
   answer: any;
 }
@@ -37,6 +39,7 @@ export interface IQuestionChoice {
   choices: [any, string][];
   multi: boolean;
   sign: boolean;
+  symbol: string,
 
   answer: any;
 }
@@ -50,7 +53,7 @@ export interface IQuestionDropdown {
   choices: [any, string][];
   multi: boolean;
   sign: boolean;
-
+  symbol: string,
   answer: any;
 }
 
@@ -58,6 +61,8 @@ export interface IQuestionDate {
   q_type: "date";
   id: number;
   question: string;
+  symbol: string,
+
   answer: any;
 }
 

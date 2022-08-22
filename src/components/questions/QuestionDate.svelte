@@ -19,7 +19,15 @@
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      oldStore.currentAnswer[question.id] = answer;
+
+      // {
+      //   qid: question.id,
+      //   answer: {
+      //     symbol: question.symbol,
+      //     value:
+      //   }
+      // }
+      oldStore.currentAnswer[question.id] = { [question.symbol]: answer };
       // console.log(oldStore.currentAnswer)
       return oldStore;
     });

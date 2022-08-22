@@ -3,9 +3,7 @@
 <script lang="ts">
   import Chat from "./components/Chat.svelte";
   import OpenChat from "./components/OpenChat.svelte";
-  import { GridClient } from "grid3_client";
 
-  console.log(GridClient);
 </script>
 
 <section

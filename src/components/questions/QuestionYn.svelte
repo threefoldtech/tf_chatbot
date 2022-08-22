@@ -19,7 +19,7 @@
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      oldStore.currentAnswer[question.id] = answer;
+      oldStore.currentAnswer[question.id] = { [question.symbol]: answer };
       // console.log(oldStore.currentAnswer)
       return oldStore;
     });
@@ -58,7 +58,7 @@
               type="radio"
               bind:group={answer}
               name="scoops"
-              value={"yes"}
+              value={true}
             />
             Yes
           </label>
@@ -68,7 +68,7 @@
               type="radio"
               bind:group={answer}
               name="scoops"
-              value={"no"}
+              value={false}
             />
             No
           </label>

@@ -34,7 +34,7 @@
 
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
-      oldStore.currentAnswer[question.id] = answer;
+      oldStore.currentAnswer[question.id] = { [question.symbol]: answer };
       // console.log(oldStore.currentAnswer)
       return oldStore;
     });

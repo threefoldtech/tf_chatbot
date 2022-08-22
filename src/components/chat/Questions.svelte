@@ -10,7 +10,7 @@
   import QuestionDropdown from "../questions/QuestionDropdown.svelte";
   import QuestionDate from "../questions/QuestionDate.svelte";
   import QuestionForm from "../questions/QuestionForm.svelte";
-import Message from "../questions/Message.svelte";
+  import Message from "../questions/Message.svelte";
 
   function __getCmp({ q_type }: Questions) {
     if (q_type === "yn") return QuestionYn;
