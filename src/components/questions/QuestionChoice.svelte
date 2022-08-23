@@ -22,37 +22,21 @@
         return onSubmitAnswer();
       }
 
-      // toggle push/pop from selected and from store
       const index = selectedChoices.findIndex((a) => a === answer);
-      
 
       if (index === -1) {
-
         selectedChoices.push(answer);
 
-        // chatStore.update((oldStore) => {
-        //   oldStore.currentAnswer[question.id] = selectedChoices
-        //   console.log(oldStore.currentAnswer);
-        //   return oldStore;
-        // });
       } else {
-        
         selectedChoices = selectedChoices.filter((a) => a !== answer);
 
-        // chatStore.update((oldStore) => {
-        //   oldStore.currentAnswer[question.id] = selectedChoices
-        //   console.log(oldStore.currentAnswer);
-        //   return oldStore;
-        // });
       }
-
-      // if (index === 0) selectedChoices = [...selectedChoices, answer];
     };
   }
 
   function onSubmitAnswer() {
     const chatserver = new ChatServer();
-    chatserver.answerQuestion(question, selectedChoices);
+    chatserver.answerQuestion(selectedChoices as any, question, selectedChoices);
   }
 
   const onDelete = () => {
@@ -70,21 +54,20 @@
   <div class="card">
     <div class="card-content">
       <div class="content">
-        {question.id}
-        <div>{@html snarkdown(question.descr)}</div>
+        <div>{@html snarkdown(question.question)}</div>
 
         {#if !form}
           <hr />
         {/if}
 
-        {#each question.choices as [value, label]}
+        {#each question.choices as choice}
           <AnswerBtn
-            text={label}
-            disabled={!isEmpty(answer) && !selectedChoices.includes(value)}
+            text={choice.title}
+            disabled={!isEmpty(answer) && !selectedChoices.includes(choice.value)}
             readonly={!isEmpty(question.answer) &&
-              selectedChoices.includes(value)}
-            selected={selectedChoices.includes(value)}
-            on:click={!isEmpty(answer) ? undefined : onToggleAnswer(value)}
+              selectedChoices.includes(choice.value)}
+            selected={selectedChoices.includes(choice.value)}
+            on:click={!isEmpty(answer) ? undefined : onToggleAnswer(choice.value)}
           />
         {/each}
       </div>

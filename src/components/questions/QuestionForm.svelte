@@ -13,6 +13,7 @@
   import QuestionInput from "../questions/QuestionInput.svelte";
   import QuestionDropdown from "../questions/QuestionDropdown.svelte";
   import QuestionDate from "../questions/QuestionDate.svelte";
+  import { load_profile } from "../../utils/handlers";
 
   function __getCmp({ q_type }: Questions) {
     if (q_type === "yn") return QuestionYn;
@@ -23,19 +24,6 @@
   }
 
   export let question: IQuestionForm;
-
-  let answer: any = undefined;
-
-  $: {
-    if (answer !== undefined) updateAnswer();
-  }
-
-  const updateAnswer = () => {
-    chatStore.update((oldStore) => {
-      oldStore.currentAnswer = answer;
-      return oldStore;
-    });
-  };
 
   const onDelete = () => {
     // just update the store to remove the question from UI.
@@ -48,17 +36,23 @@
   };
 
   const onSubmit = () => {
-    // get the value from the store.
+    let answer: any;
+
     chatStore.subscribe((store) => {
       answer = store.currentAnswer;
     });
 
-    console.log('from form')
-    console.log({ answer });
-    // then answer to the server.
     const chatserver = new ChatServer();
-    console.log(chatserver)
-    chatserver.answerQuestion(question, answer);
+
+    console.log(`got symbol: ${question.symbol}`);
+    if (question.symbol == "load_profile") {
+      load_profile(answer);
+      chatserver.answerQuestion("services_list", question, answer);
+    } else if (question.symbol == "vm_specs") {
+      chatserver.answerQuestion("deploy_vm", question, answer);
+    } else {
+      chatserver.answerQuestion(undefined, question, answer);
+    }
   };
 </script>
 

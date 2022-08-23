@@ -36,7 +36,7 @@ export interface IQuestionChoice {
   id: number;
   descr: string;
   sorted: boolean;
-  choices: [any, string][];
+  choices: any[];
   multi: boolean;
   sign: boolean;
   symbol: string,
@@ -74,6 +74,7 @@ export interface IQuestionForm {
   description: string;
   form: Questions[];
   sign: false;
+  symbol: string;
 }
 
 export type Questions =

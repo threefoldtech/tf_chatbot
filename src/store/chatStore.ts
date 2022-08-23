@@ -1,7 +1,7 @@
+import { load_profile_question } from "./../utils/questions";
 import { get, writable } from "svelte/store";
 import type { Questions } from "../types/questions";
 import type { GridClient } from "grid3_client";
-import { getGrid } from "../utils/getGrid";
 
 interface ChatStore {
   open: boolean;
@@ -22,40 +22,13 @@ interface Log {
 function createChatStore() {
   let socket = new WebSocket("ws://localhost:8081");
 
-  let gridClient;
-  getGrid(
-    "dev",
-    "mom picnic deliver again rug night rabbit music motion hole lion where",
-    "secret"
-  ).then((grid) => (gridClient = grid));
-
   const store = writable<ChatStore>({
     open: false,
-    grid: gridClient,
+    grid: undefined,
     socket,
     connected: false,
-    initQuestions: [
-      {
-        id: 0,
-        q_type: "message",
-        message: "Welcome in threefold chatbot",
-      },
-    ],
-    questions: [
-      {
-        q_type: "choices",
-        question: "### *Which Services are you looking for?*",
-        id: 0,
-        descr: "### *Which Services are you looking for?*",
-        choices: [["deploy_vm_form", "Deploy VM!"]],
-        multi: false,
-        sorted: false,
-        sign: false,
-        symbol: "init",
-
-        answer: "",
-      },
-    ],
+    initQuestions: [load_profile_question],
+    questions: [load_profile_question],
     logs: [],
     currentAnswer: {},
   });
@@ -84,10 +57,12 @@ function createChatStore() {
 
   async function __handleMessage(event: MessageEvent) {
     const data = JSON.parse(event.data);
-    console.log(data);
+    console.log({ comming_data: data });
 
     if (data.event == "invoke") {
       const req = JSON.parse(data.data);
+
+      let gridClient = get(store).grid
       const result = await gridClient.invoke(
         req.function,
         JSON.parse(req.args)

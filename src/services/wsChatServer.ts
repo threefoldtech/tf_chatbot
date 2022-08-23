@@ -1,7 +1,7 @@
 import chatStore from "../store/chatStore";
 import { get } from "svelte/store";
-import type { Questions } from "../types/questions";
-import type { IChatServer } from "../types/types";
+import type { IChatServer, IChatEventType } from "../types/types";
+import { assign } from "../utils/utils";
 
 export default class WsChatServer implements IChatServer {
   socket: WebSocket;
@@ -10,7 +10,7 @@ export default class WsChatServer implements IChatServer {
     this.socket = get(chatStore).socket;
   }
 
-  askForQuestion(event: string) {
+  askForQuestion(event: IChatEventType) {
     return this.socket.send(
       JSON.stringify({
         event,
@@ -18,40 +18,26 @@ export default class WsChatServer implements IChatServer {
     );
   }
 
-  replyOnQuestion(event: string, reply: string) {
+  /*
+    make it a one reply function and check on the type of the reply
+  */
+
+  replyOnForm(event: IChatEventType, reply: string) {
     let data = assign(reply);
     return this.socket.send(
       JSON.stringify({
         event,
-        data,
+        data: JSON.stringify(data),
       })
     );
   }
 
-  listServices(question: Questions, answer: any) {
-    // chatStore.answerQuestion(question, answer);
+  replyOnQuestion(event: IChatEventType, reply: string) {
     return this.socket.send(
-      JSON.stringify({ event: "deploy_vm_form", data: `{ "id": 12 }` })
+      JSON.stringify({
+        event,
+        reply,
+      })
     );
   }
-
-  askForService(question: Questions, answer: any) {
-    let data = {};
-    for (let query of Object.values(answer)) {
-      Object.assign(data, query);
-    }
-    console.log({ data });
-
-    this.socket.send(
-      JSON.stringify({ event: "deploy_vm", data: JSON.stringify(data) })
-    );
-  }
-}
-
-function assign(indexedObject: Object) {
-  let data = {};
-  for (let query of Object.values(indexedObject)) {
-    Object.assign(data, query);
-  }
-  return data;
 }

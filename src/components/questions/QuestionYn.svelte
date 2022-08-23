@@ -20,7 +20,6 @@
   const updateAnswer = () => {
     chatStore.update((oldStore) => {
       oldStore.currentAnswer[question.id] = { [question.symbol]: answer };
-      // console.log(oldStore.currentAnswer)
       return oldStore;
     });
   };
@@ -37,7 +36,7 @@
 
   const onSubmit = () => {
     const chatserver = new ChatServer();
-    chatserver.answerQuestion(question, answer);
+    chatserver.answerQuestion(undefined, question, answer);
   };
 </script>
 
@@ -45,7 +44,7 @@
   <div class="card">
     <div class="card-content">
       <div class="content">
-        {question.id}
+         
         <div>{@html snarkdown(question.question)}</div>
 
         {#if !form}

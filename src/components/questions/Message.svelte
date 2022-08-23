@@ -24,7 +24,7 @@
 
   const onSubmit = () => {
     const chatserver = new ChatServer();
-    chatserver.answerQuestion(question, answer);
+    chatserver.answerQuestion(undefined, question, answer);
   };
 </script>
 
@@ -32,7 +32,7 @@
   <div class="card">
     <div class="card-content">
       <div class="content">
-        {question.id}
+         
         <div>{@html snarkdown(question.message)}</div>
       </div>
     </div>
