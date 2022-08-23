@@ -1,32 +1,11 @@
 import { get, writable } from "svelte/store";
 import type { Questions } from "../types/questions";
-
-import {
-  GridClient,
-  NetworkEnv,
-  BackendStorageType,
-  KeypairType,
-} from "grid3_client";
-import { HTTPMessageBusClient } from "ts-rmb-http-client";
-
-const RMB = new HTTPMessageBusClient(0, "", "", "");
-
-function getGrid(mnemonic: string, secret: string) {
-  const grid = new GridClient(
-    NetworkEnv.dev,
-    mnemonic,
-    secret,
-    RMB,
-    undefined,
-    BackendStorageType.auto,
-    KeypairType.sr25519
-  );
-
-  return grid.connect().then(() => grid);
-}
+import type { GridClient } from "grid3_client";
+import { getGrid } from "../utils/getGrid";
 
 interface ChatStore {
   open: boolean;
+  grid: GridClient;
   initQuestions: Questions[];
   questions: Questions[];
   logs: Log[];
@@ -43,8 +22,16 @@ interface Log {
 function createChatStore() {
   let socket = new WebSocket("ws://localhost:8081");
 
+  let gridClient;
+  getGrid(
+    "dev",
+    "mom picnic deliver again rug night rabbit music motion hole lion where",
+    "secret"
+  ).then((grid) => (gridClient = grid));
+
   const store = writable<ChatStore>({
     open: false,
+    grid: gridClient,
     socket,
     connected: false,
     initQuestions: [
@@ -60,7 +47,7 @@ function createChatStore() {
         question: "### *Which Services are you looking for?*",
         id: 0,
         descr: "### *Which Services are you looking for?*",
-        choices: [["task", "Do Something!"]],
+        choices: [["deploy_vm_form", "Deploy VM!"]],
         multi: false,
         sorted: false,
         sign: false,
@@ -95,8 +82,33 @@ function createChatStore() {
     });
   }
 
+  async function __handleMessage(event: MessageEvent) {
+    const data = JSON.parse(event.data);
+    console.log(data);
+
+    if (data.event == "invoke") {
+      const req = JSON.parse(data.data);
+      const result = await gridClient.invoke(
+        req.function,
+        JSON.parse(req.args)
+      );
+      console.log(result);
+      socket.send(
+        JSON.stringify({
+          id: data.id,
+          event: "invoke_result",
+          data: JSON.stringify(result),
+        })
+      );
+      console.log("result sent: ", result);
+    } else {
+      fullStore.addQuestion(data.question);
+    }
+  }
+
   socket.onopen = __updateConnected(true);
   socket.onclose = __onCloseSocket;
+  socket.onmessage = __handleMessage;
 
   const { subscribe, set, update } = store;
 
@@ -104,12 +116,14 @@ function createChatStore() {
     subscribe,
     set,
     update,
+
     addQuestion(question: Questions) {
       return update((store) => {
         store.questions.push(question);
         return store;
       });
     },
+
     cleanStore() {
       return update((store) => {
         store.questions = store.initQuestions;
@@ -117,21 +131,23 @@ function createChatStore() {
         return store;
       });
     },
+
     deleteQuestion(questionId) {
       return update((store) => {
         store.questions = store.questions.filter(
           (question) => question.id !== questionId
         );
-
         return store;
       });
     },
+
     deleteLog(deletedLog) {
       return update((store) => {
         store.logs = store.logs.filter((log) => log.id !== deletedLog.id);
         return store;
       });
     },
+
     answerQuestion(question: Questions, answer: any) {
       return update((store) => {
         store.questions = store.questions.map((q) => {
@@ -144,38 +160,13 @@ function createChatStore() {
         return store;
       });
     },
+
     pushLogs(id: number, data: any) {
       return update((store) => {
         store.logs.push({ id, data: JSON.stringify(data) });
         return store;
       });
     },
-  };
-
-  console.log(get(store));
-
-  socket.onmessage = async (event: MessageEvent) => {
-    const data = JSON.parse(event.data);
-    console.log(data);
-
-    if (data.event == "invoke") {
-      const req = JSON.parse(data.data);
-      const grid = await getGrid("mom picnic deliver again rug night rabbit music motion hole lion where", "secret")
-      const result = await grid.invoke(req.function, JSON.parse(req.args));
-      console.log(result)
-      socket.send(
-        JSON.stringify({
-          id: data.id,
-          event: "invoke_result",
-          data: JSON.stringify(result),
-        })
-      );
-      console.log("result sent: ", result);
-    } else {
-      fullStore.addQuestion(data.question);
-
-      console.log(get(fullStore));
-    }
   };
 
   return fullStore;
