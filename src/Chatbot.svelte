@@ -1,9 +1,32 @@
 <svelte:options tag="tf-chatbot" />
 
 <script lang="ts">
+  import { onMount } from "svelte";
+  import store from "./store/chatStore";
+
   import Chat from "./components/Chat.svelte";
   import OpenChat from "./components/OpenChat.svelte";
+  import { load_profile_from_config } from "./utils/handlers";
+  import { init_welcome_msg, load_profile_question } from "./utils/questions";
 
+  onMount(async () => {
+    fetch("http://localhost:5001/profile_config")
+      .then((res) => res.json())
+      .then((res) => {
+        const config = JSON.parse(res);
+        load_profile_from_config(config);
+        store.update((store) => {
+          store.questions = [init_welcome_msg];
+          return store;
+        });
+      })
+      .catch(() => {
+        store.update((store) => {
+          store.questions = [load_profile_question];
+          return store;
+        });
+      });
+  });
 </script>
 
 <section
