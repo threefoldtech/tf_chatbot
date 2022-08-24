@@ -55,3 +55,10 @@ export const load_profile_question: Questions = {
   sign: false,
   symbol: "load_profile"
 };
+
+export const init_welcome_msg: Questions = {
+  q_type: "message",
+  id: 11,
+  message: "Your profile has been loaded from server.",
+  symbol: "loaded_profile"
+} 

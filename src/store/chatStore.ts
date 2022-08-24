@@ -2,22 +2,30 @@ import { load_profile_question } from "./../utils/questions";
 import { get, writable } from "svelte/store";
 import type { Questions } from "../types/questions";
 import type { GridClient } from "grid3_client";
+import { events } from "grid3_client";
+import { escape_object } from "svelte/internal";
 
+interface IProfileConfig {
+  net: string;
+  mne: string;
+  sec: string;
+}
 interface ChatStore {
   open: boolean;
   grid: GridClient;
+  profileConfig: IProfileConfig;
   initQuestions: Questions[];
   questions: Questions[];
-  logs: Log[];
+  logs: any[];
   socket: WebSocket;
   connected: boolean;
   currentAnswer: {};
 }
 
-interface Log {
-  id: number;
-  data: string;
-}
+// interface Log {
+//   id: number;
+//   data: string;
+// }
 
 function createChatStore() {
   let socket = new WebSocket("ws://localhost:8081");
@@ -25,10 +33,11 @@ function createChatStore() {
   const store = writable<ChatStore>({
     open: false,
     grid: undefined,
+    profileConfig: undefined,
     socket,
     connected: false,
-    initQuestions: [load_profile_question],
-    questions: [load_profile_question],
+    initQuestions: [],
+    questions: [],
     logs: [],
     currentAnswer: {},
   });
@@ -62,12 +71,14 @@ function createChatStore() {
     if (data.event == "invoke") {
       const req = JSON.parse(data.data);
 
-      let gridClient = get(store).grid
-      const result = await gridClient.invoke(
-        req.function,
-        JSON.parse(req.args)
-      );
-      console.log(result);
+      let gridClient = get(store).grid;
+      const result = await gridClient
+        .invoke(req.function, JSON.parse(req.args))
+        .catch((err) => {
+          fullStore.pushLogs(err);
+        });
+      // console.log(result);
+      fullStore.pushLogs(result);
       socket.send(
         JSON.stringify({
           id: data.id,
@@ -75,11 +86,19 @@ function createChatStore() {
           data: JSON.stringify(result),
         })
       );
-      console.log("result sent: ", result);
-    } else {
+      // console.log("result sent: ", result);
+    } else if (data.event == "echo") {
+      fullStore.pushLogs(data.log);
+    } else if (data.event == "question") {
       fullStore.addQuestion(data.question);
+    } else {
+      console.log(data);
     }
   }
+
+  events.addListener("logs", (log) => {
+    fullStore.pushLogs(log);
+  });
 
   socket.onopen = __updateConnected(true);
   socket.onclose = __onCloseSocket;
@@ -118,7 +137,7 @@ function createChatStore() {
 
     deleteLog(deletedLog) {
       return update((store) => {
-        store.logs = store.logs.filter((log) => log.id !== deletedLog.id);
+        store.logs = store.logs.filter((log) => log !== deletedLog);
         return store;
       });
     },
@@ -127,18 +146,15 @@ function createChatStore() {
       return update((store) => {
         store.questions = store.questions.map((q) => {
           if (q !== question) return q;
-          // keep all the questions unanswered to enable edit/delete
-          // q.answer = answer;
-          // store.currentAnswer = answer;
           return q;
         });
         return store;
       });
     },
 
-    pushLogs(id: number, data: any) {
+    pushLogs(data: any) {
       return update((store) => {
-        store.logs.push({ id, data: JSON.stringify(data) });
+        store.logs.push(data);
         return store;
       });
     },

@@ -5,7 +5,7 @@
   import { ChatServer } from "../../services/chatServer";
   import snarkdown from "snarkdown";
   import chatStore from "../../store/chatStore";
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
 
   export let question: IMessage;
   export let form: boolean = false;
@@ -24,6 +24,9 @@
 
   const onSubmit = () => {
     const chatserver = new ChatServer();
+
+    if (question.symbol == "loaded_profile")
+      return chatserver.answerQuestion("services_list", question, answer);
     chatserver.answerQuestion(undefined, question, answer);
   };
 </script>
@@ -32,7 +35,6 @@
   <div class="card">
     <div class="card-content">
       <div class="content">
-         
         <div>{@html snarkdown(question.message)}</div>
       </div>
     </div>

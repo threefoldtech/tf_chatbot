@@ -59,21 +59,23 @@
         style="align-items: center"
         class="is-flex is-justify-content-space-between	"
       >
-        {#each Object.entries(JSON.parse(log.data)) as data}
+        {log}
+
+        <!-- {#each Object.entries(JSON.parse(log.data)) as data}
           <div class="is-flex is-justify-content-flex-start	">
             <br />
             {@html getLog(data)}
           </div>
-        {/each}
+        {/each} -->
 
         <!-- svelte-ignore a11y-missing-attribute -->
-        <a on:click={() => deleteLog(log)}>
+        <!-- <a on:click={() => deleteLog(log)}>
           <i
             class="fa fa-trash fa-2xl"
             style="color: black;"
             aria-hidden="true"
           />
-        </a>
+        </a> -->
       </div>
       <br />
     {/each}

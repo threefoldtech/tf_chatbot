@@ -13,3 +13,16 @@ export async function load_profile(options: any) {
     return store;
   });
 }
+
+export async function load_profile_from_config(config: any) {
+  let gridClient = await getGrid(
+    config["net"],
+    config["mne"],
+    config["sec"]
+  );
+
+  chatStore.update((store) => {
+    store.grid = gridClient;
+    return store;
+  });
+}

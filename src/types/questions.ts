@@ -2,6 +2,7 @@ export interface IMessage {
   q_type: "message";
   id: number;
   message: string;
+  symbol: string;
 }
 
 export interface IQuestion {
