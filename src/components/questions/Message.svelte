@@ -41,7 +41,7 @@
 
     {#if !form}
       <footer class="card-footer">
-        {#if question.id !== 0}
+        {#if question.id !== "0"}
           <button
             on:click={onDelete}
             class="button is-danger is-light card-footer-item">Delete</button

@@ -56,7 +56,7 @@
             <input
               type="radio"
               bind:group={answer}
-              name={`${question.id}`}
+              name={question.id}
               value={true}
             />
             Yes
@@ -66,7 +66,7 @@
             <input
               type="radio"
               bind:group={answer}
-              name={`${question.id}`}
+              name={question.id}
               value={false}
             />
             No

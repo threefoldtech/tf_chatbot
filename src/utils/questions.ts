@@ -6,12 +6,12 @@ export const load_profile_question: Questions = {
   q_type: "form",
   question: "# Load your Profile",
   chat_id: "0",
-  id: id++,
+  id: "id++",
   description: "VM Deployment Spces",
   form: [
     {
       q_type: "input",
-      id: id++,
+      id: "id++",
       question: "### Network",
       descr: "",
       returntype: "string",
@@ -25,7 +25,7 @@ export const load_profile_question: Questions = {
     },
     {
       q_type: "input",
-      id: id++,
+      id: "id++",
       question: "### Mnemonics",
       descr: "",
       returntype: "string",
@@ -39,7 +39,7 @@ export const load_profile_question: Questions = {
     },
     {
       q_type: "input",
-      id: id++,
+      id: "id++",
       question: "### Store Secret",
       descr: "",
       returntype: "string",
@@ -58,7 +58,7 @@ export const load_profile_question: Questions = {
 
 export const init_welcome_msg: Questions = {
   q_type: "message",
-  id: 11,
+  id: "11",
   message: "Your profile has been loaded from server.",
   symbol: "loaded_profile"
 } 
