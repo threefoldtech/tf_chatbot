@@ -1,12 +1,23 @@
+export type Q_type =
+  | "message"
+  | "input"
+  | "yn"
+  | "choices"
+  | "menu"
+  | "date"
+  | "form";
+
 export interface IMessage {
-  q_type: "message";
+  q_type: Q_type;
   id: string;
   message: string;
   symbol: string;
+  valid?: boolean;
+  answer: undefined;
 }
 
 export interface IQuestion {
-  q_type: "input";
+  q_type: Q_type;
   id: string;
   question: string;
   descr: string;
@@ -16,37 +27,37 @@ export interface IQuestion {
   min: number;
   max: number;
   sign: boolean;
-  symbol: string,
-
+  symbol: string;
+  valid?: boolean;
   answer: any;
 }
 
 export interface IQuestionYn {
-  q_type: "yn";
+  q_type: Q_type;
   chat_id: string;
   question: string;
   id: string;
-  symbol: string,
-
+  symbol: string;
+  valid?: boolean;
   answer: any;
 }
 
 export interface IQuestionChoice {
-  q_type: "choices";
+  q_type: Q_type;
   question: string;
   id: string;
   descr: string;
   sorted: boolean;
-  choices: any[];
+  choices: { value; title }[];
   multi: boolean;
   sign: boolean;
-  symbol: string,
-
-  answer: any;
+  symbol: string;
+  valid?: boolean;
+  answer: any | any[];
 }
 
 export interface IQuestionDropdown {
-  q_type: "menu";
+  q_type: Q_type;
   question: string;
   id: string;
   descr: string;
@@ -54,31 +65,34 @@ export interface IQuestionDropdown {
   choices: [any, string][];
   multi: boolean;
   sign: boolean;
-  symbol: string,
+  valid?: boolean;
+  symbol: string;
   answer: any;
 }
 
 export interface IQuestionDate {
-  q_type: "date";
+  q_type: Q_type;
   id: string;
   question: string;
-  symbol: string,
-
+  symbol: string;
+  valid?: boolean;
   answer: any;
 }
 
 export interface IQuestionForm {
-  q_type: "form";
+  q_type: Q_type;
   question: string;
   chat_id: string;
   id: string;
   description: string;
-  form: Questions[];
+  form: IQuestions[];
   sign: false;
   symbol: string;
+  valid?: boolean;
+  answer: any;
 }
 
-export type Questions =
+export type IQuestions =
   | IQuestion
   | IQuestionYn
   | IQuestionChoice

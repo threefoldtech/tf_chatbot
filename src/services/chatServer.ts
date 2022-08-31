@@ -1,9 +1,9 @@
 import type { IChatEventType } from "./../types/types";
 import WsChatServer from "./wsChatServer";
-import type { Questions } from "../types/questions";
+import type { IQuestions } from "../types/questions";
 
 export class ChatServer extends WsChatServer {
-  answerQuestion(event: IChatEventType, question: Questions, answer: any) {
+  answerQuestion(event: IChatEventType, question: IQuestions, answer: any) {
     console.log(`calling event: ${event}`)
 
     if (event == "services_list") return super.askForQuestion(event);
@@ -11,8 +11,5 @@ export class ChatServer extends WsChatServer {
     if (event == "deploy_vm") return super.replyOnForm(event, answer)
 
     console.error('unknown event')
-
-    // if (question.id === 0) return super.listServices(question, answer);
-    // super.askForService(question, answer);
   }
 }

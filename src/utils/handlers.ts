@@ -3,10 +3,10 @@ import { getGrid } from "./getGrid";
 import chatStore from "../store/chatStore";
 
 export async function load_profile(options: any) {
-  let data = assign(options);
-  console.log({ profile_data: data });
+  // let data = assign(options);
+  console.log({ profile_data: options });
 
-  let gridClient = await getGrid(data["net"], data["mne"], data["secret"]);
+  let gridClient = await getGrid(options["net"], options["mne"], options["secret"]);
 
   chatStore.update((store) => {
     store.grid = gridClient;

@@ -8,21 +8,31 @@
   import OpenChat from "./components/OpenChat.svelte";
   import { load_profile_from_config } from "./utils/handlers";
   import { init_welcome_msg, load_profile_question } from "./utils/questions";
+  import {
+    input_question_example,
+    yn_question_example,
+    choices_question_example,
+  } from "./utils/questions_examples";
 
   onMount(async () => {
     fetch("http://localhost:5001/profile_config")
       .then((res) => res.json())
       .then((res) => {
         const config = JSON.parse(res);
+        console.log("Configs are loaded.");
         load_profile_from_config(config);
         store.update((store) => {
           store.questions = [init_welcome_msg];
+          store.initQuestions = [init_welcome_msg];
+
           return store;
         });
       })
       .catch(() => {
+        console.log("Couldn't find configs.");
         store.update((store) => {
           store.questions = [load_profile_question];
+          store.initQuestions = [load_profile_question];
           return store;
         });
       });

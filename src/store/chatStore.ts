@@ -1,9 +1,7 @@
-import { load_profile_question } from "./../utils/questions";
 import { get, writable } from "svelte/store";
-import type { Questions } from "../types/questions";
+import type { IQuestions } from "../types/questions";
 import type { GridClient } from "grid3_client";
 import { events } from "grid3_client";
-import { escape_object } from "svelte/internal";
 
 interface IProfileConfig {
   net: string;
@@ -14,18 +12,12 @@ interface ChatStore {
   open: boolean;
   grid: GridClient;
   profileConfig: IProfileConfig;
-  initQuestions: Questions[];
-  questions: Questions[];
+  initQuestions: IQuestions[];
+  questions: IQuestions[];
   logs: any[];
   socket: WebSocket;
   connected: boolean;
-  currentAnswer: {};
 }
-
-// interface Log {
-//   id: number;
-//   data: string;
-// }
 
 function createChatStore() {
   let socket = new WebSocket("ws://localhost:8081");
@@ -39,7 +31,6 @@ function createChatStore() {
     initQuestions: [],
     questions: [],
     logs: [],
-    currentAnswer: {},
   });
 
   function __updateConnected(connected: boolean) {
@@ -77,7 +68,6 @@ function createChatStore() {
         .catch((err) => {
           fullStore.pushLogs(err);
         });
-      // console.log(result);
       fullStore.pushLogs(result);
       socket.send(
         JSON.stringify({
@@ -86,7 +76,6 @@ function createChatStore() {
           data: JSON.stringify(result),
         })
       );
-      // console.log("result sent: ", result);
     } else if (data.event == "echo") {
       fullStore.pushLogs(data.log);
     } else if (data.event == "question") {
@@ -111,7 +100,7 @@ function createChatStore() {
     set,
     update,
 
-    addQuestion(question: Questions) {
+    addQuestion(question: IQuestions) {
       return update((store) => {
         store.questions.push(question);
         return store;
@@ -142,15 +131,15 @@ function createChatStore() {
       });
     },
 
-    answerQuestion(question: Questions, answer: any) {
-      return update((store) => {
-        store.questions = store.questions.map((q) => {
-          if (q !== question) return q;
-          return q;
-        });
-        return store;
-      });
-    },
+    // answerQuestion(question: IQuestions, answer: any) {
+    //   return update((store) => {
+    //     store.questions = store.questions.map((q) => {
+    //       if (q !== question) return q;
+    //       return q;
+    //     });
+    //     return store;
+    //   });
+    // },
 
     pushLogs(data: any) {
       return update((store) => {
