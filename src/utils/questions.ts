@@ -1,17 +1,16 @@
-import type { Questions } from "../types/questions";
+import type { IMessage, IQuestionForm } from "../types/questions";
+import { getId } from "./utils";
 
-let id = 1;
-
-export const load_profile_question: Questions = {
+export const load_profile_question: IQuestionForm = {
   q_type: "form",
   question: "# Load your Profile",
-  chat_id: "0",
-  id: "id++",
+  chat_id: getId(),
+  id: getId(),
   description: "VM Deployment Spces",
   form: [
     {
       q_type: "input",
-      id: "id++",
+      id: getId(),
       question: "### Network",
       descr: "",
       returntype: "string",
@@ -21,11 +20,11 @@ export const load_profile_question: Questions = {
       max: 0,
       sign: false,
       symbol: "net",
-      answer: "",
+      answer: "dev",
     },
     {
       q_type: "input",
-      id: "id++",
+      id: getId(),
       question: "### Mnemonics",
       descr: "",
       returntype: "string",
@@ -35,11 +34,11 @@ export const load_profile_question: Questions = {
       max: 0,
       sign: false,
       symbol: "mne",
-      answer: "",
+      answer: "mnr",
     },
     {
       q_type: "input",
-      id: "id++",
+      id: getId(),
       question: "### Store Secret",
       descr: "",
       returntype: "string",
@@ -49,16 +48,18 @@ export const load_profile_question: Questions = {
       max: 0,
       sign: false,
       symbol: "secret",
-      answer: "",
+      answer: "sec",
     },
   ],
   sign: false,
-  symbol: "load_profile"
+  symbol: "load_profile",
+  answer: "",
 };
 
-export const init_welcome_msg: Questions = {
+export const init_welcome_msg: IMessage = {
   q_type: "message",
-  id: "11",
+  id: getId(),
   message: "Your profile has been loaded from server.",
-  symbol: "loaded_profile"
-} 
+  symbol: "loaded_profile",
+  answer: undefined,
+};

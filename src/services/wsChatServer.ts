@@ -19,15 +19,14 @@ export default class WsChatServer implements IChatServer {
   }
 
   /*
-    make it a one reply function and check on the type of the reply
+    @TODO: make it a one reply function and check on the type of the reply
   */
 
   replyOnForm(event: IChatEventType, reply: string) {
-    let data = assign(reply);
     return this.socket.send(
       JSON.stringify({
         event,
-        data: JSON.stringify(data),
+        data: JSON.stringify(reply),
       })
     );
   }

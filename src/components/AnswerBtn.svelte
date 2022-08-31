@@ -2,9 +2,9 @@
 
 <script lang="ts">
   export let text: string;
-  export let disabled: boolean;
-  export let readonly: boolean;
-  export let selected: boolean;
+  export let disabled: boolean = false;
+  export let readonly: boolean = false;
+  export let selected: boolean = false;
 </script>
 
 <button
