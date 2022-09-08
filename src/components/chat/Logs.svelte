@@ -14,8 +14,8 @@
   }
 
   const getLog = (log) => {
-    if (typeof log[1] === "string") return snarkdown(`${log[1]}`);
-    return JSON.stringify(log[1]);
+    if (typeof log === "string") return log
+    return JSON.stringify(log);
   };
 </script>
 
@@ -59,7 +59,7 @@
         style="align-items: center"
         class="is-flex is-justify-content-space-between	"
       >
-        {log}
+        {getLog(log)}
 
         <!-- {#each Object.entries(JSON.parse(log.data)) as data}
           <div class="is-flex is-justify-content-flex-start	">
