@@ -66,9 +66,12 @@ function createChatStore() {
       const result = await gridClient
         .invoke(req.function, JSON.parse(req.args))
         .catch((err) => {
-          fullStore.pushLogs(err);
+          // error logs after gridclient finished
+          fullStore.pushLogs({ type: "error", content: err });
         });
-      fullStore.pushLogs(result);
+
+      // the final response from gridClient, but it is duplicated because it's already pushed
+      // fullStore.pushLogs({ type: "success", content: result });
       socket.send(
         JSON.stringify({
           id: data.id,
@@ -77,7 +80,8 @@ function createChatStore() {
         })
       );
     } else if (data.event == "echo") {
-      fullStore.pushLogs(data.log);
+      // logs comming from the server
+      fullStore.pushLogs({ type: "info", content: data.log });
     } else if (data.event == "question") {
       fullStore.addQuestion(data.question);
     } else {
@@ -86,7 +90,8 @@ function createChatStore() {
   }
 
   events.addListener("logs", (log) => {
-    fullStore.pushLogs(log);
+    // logs comming from gridclient while executing functions
+    fullStore.pushLogs({ type: "info", content: log });
   });
 
   socket.onopen = __updateConnected(true);

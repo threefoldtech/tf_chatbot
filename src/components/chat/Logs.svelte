@@ -14,8 +14,15 @@
   }
 
   const getLog = (log) => {
-    if (typeof log === "string") return log
-    return JSON.stringify(log);
+    if (typeof log.content === "string") return log.content
+    if (log.type == "error") return log.content
+
+    /*
+      @TODO: pretty print json object
+    */
+    if (typeof log.content === "object") return JSON.stringify(log.content, null, 4);
+
+    return log
   };
 </script>
 
@@ -55,29 +62,21 @@
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.logs as log}
-      <div
-        style="align-items: center"
-        class="is-flex is-justify-content-space-between	"
-      >
-        {getLog(log)}
-
-        <!-- {#each Object.entries(JSON.parse(log.data)) as data}
-          <div class="is-flex is-justify-content-flex-start	">
-            <br />
-            {@html getLog(data)}
+      <div class="container" style="word-wrap: break-word;">
+        {#if log.type == "error"}
+          <div class="notification is-danger is-light">
+            {getLog(log)}
           </div>
-        {/each} -->
-
-        <!-- svelte-ignore a11y-missing-attribute -->
-        <!-- <a on:click={() => deleteLog(log)}>
-          <i
-            class="fa fa-trash fa-2xl"
-            style="color: black;"
-            aria-hidden="true"
-          />
-        </a> -->
+        {:else if log.type == "success"}
+          <div class="notification is-primary is-light">
+            {getLog(log)}
+          </div>
+        {:else}
+          <div class="notification is-info is-light ">
+            {getLog(log)}
+          </div>
+        {/if}
       </div>
-      <br />
     {/each}
   </div>
 </section>
