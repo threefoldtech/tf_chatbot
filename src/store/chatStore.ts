@@ -84,6 +84,9 @@ function createChatStore() {
       fullStore.pushLogs({ type: "info", content: data.log });
     } else if (data.event == "question") {
       fullStore.addQuestion(data.question);
+    } else if (data.event == "echo_and_question") {
+      fullStore.pushLogs({ type: "info", content: data.log });
+      fullStore.addQuestion(data.question);
     } else {
       console.log(data);
     }
