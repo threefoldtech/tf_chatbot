@@ -8,4 +8,4 @@ export interface IChatServer {
   // askForService(question: Questions, answer: any): any;
 }
 
-export type IChatEventType = "services_list" | "deploy_vm_form" | "deploy_vm";
+export type IChatEventType = "services_list" | "deploy_vm_form" | "deploy_vm" | "get_balance" | "get_balance_form";

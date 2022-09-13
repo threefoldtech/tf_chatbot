@@ -9,6 +9,8 @@ export class ChatServer extends WsChatServer {
     if (event == "services_list") return super.askForQuestion(event);
     if (event == "deploy_vm_form") return super.askForQuestion(event)
     if (event == "deploy_vm") return super.replyOnForm(event, answer)
+    if (event == "get_balance_form") return super.askForQuestion(event)
+    if (event == "get_balance") return super.replyOnForm(event, answer)
 
     console.error('unknown event')
   }

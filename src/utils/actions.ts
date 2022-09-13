@@ -23,6 +23,9 @@ const submit = (question, answer: any) => {
   } else if (question.symbol == "vm_specs") {
     chatserver.answerQuestion("deploy_vm", question, answer);
 
+  } else if (question.symbol == "acc_address") {
+    chatserver.answerQuestion("get_balance", question, answer);
+
   } else {
     chatserver.answerQuestion(undefined, question, answer);
   }
