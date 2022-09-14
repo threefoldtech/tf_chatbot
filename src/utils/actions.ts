@@ -26,6 +26,12 @@ const submit = (question, answer: any) => {
   } else if (question.symbol == "acc_address") {
     chatserver.answerQuestion("get_balance", question, answer);
 
+  } else if (question.symbol == "twin_id") {
+    chatserver.answerQuestion("get_twin", question, answer);
+
+  } else if (question.symbol == "k8s_specs") {
+    chatserver.answerQuestion("deploy_k8s", question, answer);
+
   } else {
     chatserver.answerQuestion(undefined, question, answer);
   }
