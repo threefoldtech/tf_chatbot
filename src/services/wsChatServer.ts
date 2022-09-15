@@ -1,31 +1,42 @@
 import chatStore from "../store/chatStore";
 import { get } from "svelte/store";
-import type { Questions } from "../types/questions";
-import type { IChatServer } from "../types/types";
+import type { IChatServer, IChatEventType } from "../types/types";
+import { assign } from "../utils/utils";
 
 export default class WsChatServer implements IChatServer {
-  socket: any;
+  socket: WebSocket;
 
   constructor() {
     this.socket = get(chatStore).socket;
   }
 
-  listServices(question: Questions, answer: any) {
-    return this.socket.emit("services", (data: Questions) => {
-      chatStore.answerQuestion(question, answer);
-      chatStore.addQuestion(data);
-    });
+  askForQuestion(event: IChatEventType) {
+    return this.socket.send(
+      JSON.stringify({
+        event,
+      })
+    );
   }
 
-  askForService(question: Questions, answer: any) {
-    return this.socket.emit(
-      "askForService",
-      answer,
-      ({ logs, services }: any) => {
-        chatStore.answerQuestion(question, answer);
-        chatStore.pushLogs(question.id, logs);
-        chatStore.addQuestion(services);
-      }
+  /*
+    @TODO: make it a one reply function and check on the type of the reply
+  */
+
+  replyOnForm(event: IChatEventType, reply: string) {
+    return this.socket.send(
+      JSON.stringify({
+        event,
+        data: JSON.stringify(reply),
+      })
+    );
+  }
+
+  replyOnQuestion(event: IChatEventType, reply: string) {
+    return this.socket.send(
+      JSON.stringify({
+        event,
+        reply,
+      })
     );
   }
 }

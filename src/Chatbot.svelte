@@ -1,8 +1,42 @@
 <svelte:options tag="tf-chatbot" />
 
 <script lang="ts">
+  import { onMount } from "svelte";
+  import store from "./store/chatStore";
+
   import Chat from "./components/Chat.svelte";
   import OpenChat from "./components/OpenChat.svelte";
+  import { load_profile_from_config } from "./utils/handlers";
+  import { init_welcome_msg, load_profile_question } from "./utils/questions";
+  import {
+    input_question_example,
+    yn_question_example,
+    choices_question_example,
+  } from "./utils/questions_examples";
+
+  onMount(async () => {
+    fetch("http://localhost:5001/profile_config")
+      .then((res) => res.json())
+      .then((res) => {
+        const config = JSON.parse(res);
+        console.log("Configs are loaded.");
+        load_profile_from_config(config);
+        store.update((store) => {
+          store.questions = [init_welcome_msg];
+          store.initQuestions = [init_welcome_msg];
+
+          return store;
+        });
+      })
+      .catch(() => {
+        console.log("Couldn't find configs.");
+        store.update((store) => {
+          store.questions = [load_profile_question];
+          store.initQuestions = [load_profile_question];
+          return store;
+        });
+      });
+  });
 </script>
 
 <section
@@ -11,7 +45,7 @@
   style:font-size="1em"
   style:font-weight="400"
   style:line-height="1.5"
-  >
+>
   <!-- Start global css style for all components -->
   <style>
     [nice-scroll]::-webkit-scrollbar {

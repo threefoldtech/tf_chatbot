@@ -1,33 +1,31 @@
 <svelte:options tag="tf-chat-questions" />
 
 <script lang="ts">
-  import chatStore from "../../store/chatStore";
-  import type { Questions } from "../../types/questions";
-
-  import QuestionChoice from "../questions/QuestionChoice.svelte";
-  import QuestionYn from "../questions/QuestionYn.svelte";
+  import QuestionForm from "../questions/QuestionForm.svelte";
   import QuestionInput from "../questions/QuestionInput.svelte";
+  import QuestionYn from "../questions/QuestionYn.svelte";
+  import QuestionChoice from "../questions/QuestionChoice.svelte";
   import QuestionDropdown from "../questions/QuestionDropdown.svelte";
   import QuestionDate from "../questions/QuestionDate.svelte";
-  import QuestionForm from "../questions/QuestionForm.svelte";
-import Message from "../questions/Message.svelte";
+  import Message from "../questions/Message.svelte";
 
-  function __getCmp({ type }: Questions) {
-    if (type === "yn") return QuestionYn;
-    if (type === "question_choice") return QuestionChoice;
-    if (type === "question") return QuestionInput;
-    if (type === "question_dropdown") return QuestionDropdown;
-    if (type === "q-date") return QuestionDate;
-    if (type === "question_form") return QuestionForm;
-    if (type === 'message') return Message;
+  import Actions from "../Actions.svelte";
+
+  import chatStore from "../../store/chatStore";
+  import type { IQuestions } from "../../types/questions";
+
+  function __getCmp({ q_type }: IQuestions) {
+    if (q_type === "yn") return QuestionYn;
+    if (q_type === "choices") return QuestionChoice;
+    if (q_type === "input") return QuestionInput;
+    if (q_type === "menu") return QuestionDropdown;
+    if (q_type === "date") return QuestionDate;
+    if (q_type === "form") return QuestionForm;
+    if (q_type === "message") return Message;
   }
 
   const deleteAllQs = () => {
     chatStore.cleanStore();
-  };
-
-  const deleteSelected = (questionId) => {
-    chatStore.deleteQuestion(questionId);
   };
 </script>
 
@@ -61,8 +59,12 @@ import Message from "../questions/Message.svelte";
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.questions as question}
-      <svelte:component this={__getCmp(question)} {question} />
-
+      <svelte:component
+        this={__getCmp(question)}
+        {question}
+        form={false}
+      />
+      <Actions {question} />
       <br />
     {/each}
   </div>

@@ -13,27 +13,16 @@
     chatStore.deleteLog(log);
   }
 
-  // const getLog = (log) => {
-  //   const data = JSON.parse(log.data);
-  //   console.log(data);
-  //   if (typeof data === "string") {
-  //     console.log("isStirng");
-  //     return data;
-  //   } else {
-  //     console.log("else");
-  //     let logs = "";
-  //     for (let query of data) {
-  //       logs += `${Object.keys(query)} ${Object.values(query)}\n`;
-  //     }
-  //     return logs;
-  //   }
-  // };
-
   const getLog = (log) => {
-    // console.log(typeof log[1]);
-    // console.log(log[1]);
-    if (typeof log[1] === "string") return snarkdown(`${log[1]}`);
-    return JSON.stringify(log[1]);
+    if (typeof log.content === "string") return log.content
+    if (log.type == "error") return log.content
+
+    /*
+      @TODO: pretty print json object
+    */
+    if (typeof log.content === "object") return JSON.stringify(log.content, null, 4);
+
+    return log
   };
 </script>
 
@@ -73,32 +62,21 @@
 
   <div nice-scroll style:padding="1rem " style:overflow-y="auto">
     {#each $chatStore.logs as log}
-      <div
-        style="align-items: center"
-        class="is-flex is-justify-content-space-between	"
-      >
-        <!-- comment for now. todo better parsing. -->
-        <!-- {@html snarkdown(JSON.parse(JSON.parse(log.data)))} -->
-        <!-- {console.log(Object.values(JSON.parse(log.data)))} -->
-
-        <!-- {@html snarkdown(`${Object.values(JSON.parse(log.data))}`)} -->
-        {#each Object.entries(JSON.parse(log.data)) as data}
-          <div class="is-flex is-justify-content-flex-start	">
-            <br />
-            {@html getLog(data)}
+      <div class="container" style="word-wrap: break-word;">
+        {#if log.type == "error"}
+          <div class="notification is-danger is-light">
+            {getLog(log)}
           </div>
-        {/each}
-
-        <!-- svelte-ignore a11y-missing-attribute -->
-        <a on:click={() => deleteLog(log)}>
-          <i
-            class="fa fa-trash fa-2xl"
-            style="color: black;"
-            aria-hidden="true"
-          />
-        </a>
+        {:else if log.type == "success"}
+          <div class="notification is-primary is-light">
+            {getLog(log)}
+          </div>
+        {:else}
+          <div class="notification is-info is-light ">
+            {getLog(log)}
+          </div>
+        {/if}
       </div>
-      <br />
     {/each}
   </div>
 </section>

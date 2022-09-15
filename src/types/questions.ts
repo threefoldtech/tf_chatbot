@@ -1,12 +1,24 @@
+export type Q_type =
+  | "message"
+  | "input"
+  | "yn"
+  | "choices"
+  | "menu"
+  | "date"
+  | "form";
+
 export interface IMessage {
-  type: "message";
-  id: number;
+  q_type: Q_type;
+  id: string;
   message: string;
+  symbol: string;
+  valid?: boolean;
+  answer: undefined;
 }
 
 export interface IQuestion {
-  type: "question";
-  id: number;
+  q_type: Q_type;
+  id: string;
   question: string;
   descr: string;
   returntype: "string" | "bool" | "uint" | "int";
@@ -15,63 +27,72 @@ export interface IQuestion {
   min: number;
   max: number;
   sign: boolean;
-
+  symbol: string;
+  valid?: boolean;
   answer: any;
 }
 
 export interface IQuestionYn {
-  type: "yn";
+  q_type: Q_type;
   chat_id: string;
   question: string;
-  id: number;
-
+  id: string;
+  symbol: string;
+  valid?: boolean;
   answer: any;
 }
 
 export interface IQuestionChoice {
-  type: "question_choice";
+  q_type: Q_type;
   question: string;
-  id: number;
+  id: string;
   descr: string;
   sorted: boolean;
-  choices: [any, string][];
+  choices: { value; title }[];
   multi: boolean;
   sign: boolean;
-
-  answer: any;
+  symbol: string;
+  valid?: boolean;
+  answer: any | any[];
 }
 
 export interface IQuestionDropdown {
-  type: "question_dropdown";
+  q_type: Q_type;
   question: string;
-  id: number;
+  id: string;
   descr: string;
   sorted: boolean;
   choices: [any, string][];
   multi: boolean;
   sign: boolean;
-
+  valid?: boolean;
+  symbol: string;
   answer: any;
 }
 
 export interface IQuestionDate {
-  type: "q-date";
-  id: number;
+  q_type: Q_type;
+  id: string;
   question: string;
+  symbol: string;
+  valid?: boolean;
   answer: any;
 }
 
 export interface IQuestionForm {
-  type: "question_form";
+  q_type: Q_type;
   question: string;
   chat_id: string;
-  id: number;
+  id: string;
   description: string;
-  form: Questions[];
+  form: IQuestions[];
   sign: false;
+  symbol: string;
+  valid?: boolean;
+  answer: any;
 }
 
-export type Questions =
+export type IQuestions =
   | IQuestion
   | IQuestionYn
   | IQuestionChoice
